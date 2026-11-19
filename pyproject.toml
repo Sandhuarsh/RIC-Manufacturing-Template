@@ -5,7 +5,6 @@ authors = [
 ]
 description = "Rapid Implementation Cockpit (RIC) template: configurable master data numbering for MSME ERPNext implementations"
 requires-python = ">=3.10"
-readme = "README.md"
 dynamic = ["version"]
 dependencies = []
 
