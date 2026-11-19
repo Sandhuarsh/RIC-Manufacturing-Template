@@ -1,0 +1,138 @@
+{
+ "actions": [],
+ "autoname": "field:item_group",
+ "creation": "2026-11-19 10:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "engine": "InnoDB",
+ "field_order": [
+  "item_group",
+  "enabled",
+  "column_break_1",
+  "prefix",
+  "use_subgroup_abbr",
+  "section_break_range",
+  "start_number",
+  "end_number",
+  "column_break_2",
+  "padding",
+  "last_number",
+  "section_break_preview",
+  "example_code"
+ ],
+ "fields": [
+  {
+   "description": "Rule applies to this group and all groups below it (nearest rule wins). Normally a Level 1 group such as Finished Product.",
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Group",
+   "options": "Item Group",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Text placed at the start of every code, for example IM-FG-",
+   "fieldname": "prefix",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Prefix",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "description": "Adds the RIC Abbreviation of the item's own group after the prefix, for example IM-FG-HYD-100001",
+   "fieldname": "use_subgroup_abbr",
+   "fieldtype": "Check",
+   "label": "Include Sub-Group Abbreviation"
+  },
+  {
+   "fieldname": "section_break_range",
+   "fieldtype": "Section Break",
+   "label": "Number Range"
+  },
+  {
+   "fieldname": "start_number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Start Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "End Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "description": "Minimum digits in the number. 0 keeps the number as it is; 6 turns 42 into 000042.",
+   "fieldname": "padding",
+   "fieldtype": "Int",
+   "label": "Number Padding"
+  },
+  {
+   "default": "0",
+   "description": "Last number issued. Maintained automatically; change only to move the counter.",
+   "fieldname": "last_number",
+   "fieldtype": "Int",
+   "label": "Last Number Used"
+  },
+  {
+   "fieldname": "section_break_preview",
+   "fieldtype": "Section Break",
+   "label": "Preview"
+  },
+  {
+   "fieldname": "example_code",
+   "fieldtype": "Data",
+   "label": "Next Code (Example)",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-11-19 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "RIC Template",
+ "name": "RIC Naming Rule",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Stock Manager"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
