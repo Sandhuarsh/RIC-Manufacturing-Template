@@ -2,15 +2,70 @@
 
 import frappe
 
-# (item group, prefix, start, end, uses sub-group abbreviation)
+# (group to create, existing names to reuse instead, prefix, start, end, uses sub-group abbreviation)
+# An existing group with any of the alias names is reused, so a site that already has
+# "Sub Assemblies" or "Consumable" does not get a second, near-identical group.
 DEFAULT_ITEM_RULES = [
-    ("Finished Product", "IM-FG-", 100000, 199999, 1),
-    ("Sub Assembly", "IM-SF-", 200000, 299999, 1),
-    ("Raw Material", "IM-RIM-", 300000, 399999, 1),
-    ("Packing Material", "IM-PIM-", 400000, 499999, 1),
-    ("Consumables", "IM-CO-", 500000, 599999, 1),
-    ("Services", "IM-SR-", 600000, 699999, 1),
+    ("Finished Product", ("Finished Product", "Finished Products", "Products"), "IM-FG-", 100000, 199999, 1),
+    ("Sub Assembly", ("Sub Assembly", "Sub Assemblies", "Semi Finished Goods"), "IM-SF-", 200000, 299999, 1),
+    ("Raw Material", ("Raw Material", "Raw Materials"), "IM-RIM-", 300000, 399999, 1),
+    ("Packing Material", ("Packing Material", "Packing Materials", "Packaging Material"), "IM-PIM-", 400000, 499999, 1),
+    ("Consumables", ("Consumables", "Consumable"), "IM-CO-", 500000, 599999, 1),
+    ("Services", ("Services", "Service"), "IM-SR-", 600000, 699999, 1),
 ]
+
+
+def _find_group(names):
+    for name in names:
+        if frappe.db.exists("Item Group", name):
+            return frappe.db.get_value("Item Group", name, "name")  # real spelling / case
+    return None
+
+
+def create_default_item_rules():
+    """Create a numbering rule for each standard Level 1 group. Existing rules are untouched.
+
+    Existing groups with similar names are reused (and turned into parent groups so
+    sub-groups can be added). Missing groups are created. Returns what was done.
+    """
+    done = []
+    for group, aliases, prefix, start, end, use_abbr in DEFAULT_ITEM_RULES:
+        existing = _find_group(aliases)
+
+        if existing:
+            if frappe.db.exists("RIC Naming Rule", existing):
+                continue
+            if not frappe.db.get_value("Item Group", existing, "is_group"):
+                frappe.db.set_value("Item Group", existing, "is_group", 1)
+            target = existing
+            note = f"{target} (existing group)" if target != group else target
+        else:
+            frappe.get_doc(
+                {
+                    "doctype": "Item Group",
+                    "item_group_name": group,
+                    "parent_item_group": "All Item Groups",
+                    "is_group": 1,
+                }
+            ).insert(ignore_permissions=True)
+            target = group
+            note = f"{target} (new group)"
+
+        frappe.get_doc(
+            {
+                "doctype": "RIC Naming Rule",
+                "item_group": target,
+                "enabled": 1,
+                "prefix": prefix,
+                "use_subgroup_abbr": use_abbr,
+                "start_number": start,
+                "end_number": end,
+                "padding": 0,
+            }
+        ).insert(ignore_permissions=True)
+        done.append(note)
+
+    return done
 
 
 # (document type, condition field, prefix, label)
@@ -50,42 +105,5 @@ def create_default_return_note_rules():
             }
         ).insert(ignore_permissions=True)
         created.append(label)
-
-    return created
-
-
-def create_default_item_rules():
-    """Create missing Level 1 item groups and their rules. Existing rules are untouched.
-
-    Returns the names of the rules that were created.
-    """
-    created = []
-    for group, prefix, start, end, use_abbr in DEFAULT_ITEM_RULES:
-        if frappe.db.exists("RIC Naming Rule", group):
-            continue
-
-        if not frappe.db.exists("Item Group", group):
-            frappe.get_doc(
-                {
-                    "doctype": "Item Group",
-                    "item_group_name": group,
-                    "parent_item_group": "All Item Groups",
-                    "is_group": 1,
-                }
-            ).insert(ignore_permissions=True)
-
-        frappe.get_doc(
-            {
-                "doctype": "RIC Naming Rule",
-                "item_group": group,
-                "enabled": 1,
-                "prefix": prefix,
-                "use_subgroup_abbr": use_abbr,
-                "start_number": start,
-                "end_number": end,
-                "padding": 0,
-            }
-        ).insert(ignore_permissions=True)
-        created.append(group)
 
     return created

@@ -12,7 +12,10 @@ after_migrate = "ric_template.install.ensure_custom_fields"
 
 # Client side
 # -----------
-doctype_js = {"Item": "public/js/item.js"}
+doctype_js = {
+    "Item": "public/js/item.js",
+    "Item Group": "public/js/item_group.js",
+}
 
 # Document events
 # ---------------

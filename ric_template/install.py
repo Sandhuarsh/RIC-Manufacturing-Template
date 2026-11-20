@@ -8,7 +8,19 @@ CUSTOM_FIELDS = {
             "fieldtype": "Data",
             "insert_after": "parent_item_group",
             "description": "Short code added to item codes when the numbering rule uses sub-group abbreviations (for example HYD).",
-        }
+        },
+        {
+            "fieldname": "ric_numbering_section",
+            "label": "Item Code Numbering (RIC)",
+            "fieldtype": "Section Break",
+            "insert_after": "ric_abbr",
+        },
+        {
+            "fieldname": "ric_rule_html",
+            "label": "Numbering Rule",
+            "fieldtype": "HTML",
+            "insert_after": "ric_numbering_section",
+        },
     ]
 }
 

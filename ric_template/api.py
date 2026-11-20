@@ -26,6 +26,29 @@ def get_next_item_code(item_group):
 
 
 @frappe.whitelist()
+def get_rule_info(item_group):
+    """Numbering rule that applies to an Item Group, for the panel on the Item Group form."""
+    frappe.has_permission("Item Group", "read", throw=True)
+
+    rule_name = get_rule_name(item_group)
+    if not rule_name:
+        return None
+
+    rule = frappe.get_doc("RIC Naming Rule", rule_name)
+    return {
+        "rule": rule.name,
+        "inherited": rule.item_group != item_group,
+        "prefix": rule.prefix,
+        "start_number": rule.start_number,
+        "end_number": rule.end_number,
+        "last_number": rule.last_number,
+        "padding": rule.padding,
+        "use_subgroup_abbr": rule.use_subgroup_abbr,
+        "example": rule.example_code,
+    }
+
+
+@frappe.whitelist()
 def create_default_return_note_rules():
     """Create the standard credit / debit note numbering rules (counters start at 1)."""
     frappe.only_for("System Manager")
