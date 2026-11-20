@@ -7,6 +7,7 @@ CUSTOM_FIELDS = {
             "label": "RIC Abbreviation",
             "fieldtype": "Data",
             "insert_after": "parent_item_group",
+            "depends_on": "eval:!doc.is_group",
             "description": "Short code added to item codes when the numbering rule uses sub-group abbreviations (for example HYD).",
         },
         {
