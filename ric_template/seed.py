@@ -7,9 +7,9 @@ import frappe
 # "Sub Assemblies" or "Consumable" does not get a second, near-identical group.
 DEFAULT_ITEM_RULES = [
     ("Finished Product", ("Finished Product", "Finished Products", "Products"), "IM-FG-", 100000, 199999, 1),
-    ("Sub Assembly", ("Sub Assembly", "Sub Assemblies", "Semi Finished Goods"), "IM-SF-", 200000, 299999, 1),
-    ("Raw Material", ("Raw Material", "Raw Materials"), "IM-RIM-", 300000, 399999, 1),
-    ("Packing Material", ("Packing Material", "Packing Materials", "Packaging Material"), "IM-PIM-", 400000, 499999, 1),
+    ("Sub Assembly", ("Sub Assembly", "Sub Assemblies", "Semi Finished Goods"), "IM-SA-", 200000, 299999, 1),
+    ("Raw Material", ("Raw Material", "Raw Materials"), "IM-RM-", 300000, 399999, 1),
+    ("Packing Material", ("Packing Material", "Packing Materials", "Packaging Material"), "IM-PM-", 400000, 499999, 1),
     ("Consumables", ("Consumables", "Consumable"), "IM-CO-", 500000, 599999, 1),
     ("Services", ("Services", "Service"), "IM-SR-", 600000, 699999, 1),
 ]
