@@ -18,7 +18,7 @@ frappe.ui.form.on("Item Group", {
 						`<p class="text-muted">${__("No item code numbering rule applies to this group.")}</p>`
 					);
 					frm.add_custom_button(__("Create Numbering Rule"), () => {
-						frappe.new_doc("RIC Naming Rule", { item_group: frm.doc.name });
+						frappe.new_doc("Item Naming Rule", { item_group: frm.doc.name });
 					}, __("RIC"));
 					return;
 				}
@@ -38,7 +38,7 @@ frappe.ui.form.on("Item Group", {
 					</table>`);
 
 				frm.add_custom_button(__("Open Numbering Rule"), () => {
-					frappe.set_route("Form", "RIC Naming Rule", info.rule);
+					frappe.set_route("Form", "Item Naming Rule", info.rule);
 				}, __("RIC"));
 			});
 	},

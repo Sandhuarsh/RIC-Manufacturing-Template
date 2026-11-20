@@ -3,3 +3,4 @@
 
 [post_model_sync]
 # Patches added in this section will be executed after doctypes are migrated
+ric_template.patches.rename_ric_naming_rule

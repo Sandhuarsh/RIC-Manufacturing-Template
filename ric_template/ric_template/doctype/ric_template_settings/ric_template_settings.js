@@ -28,6 +28,6 @@ frappe.ui.form.on("RIC Template Settings", {
 			);
 		});
 
-		frm.add_custom_button(__("Open Numbering Rules"), () => frappe.set_route("List", "RIC Naming Rule"));
+		frm.add_custom_button(__("Open Numbering Rules"), () => frappe.set_route("List", "Item Naming Rule"));
 	},
 });

@@ -33,7 +33,7 @@ def create_default_item_rules():
         existing = _find_group(aliases)
 
         if existing:
-            if frappe.db.exists("RIC Naming Rule", existing):
+            if frappe.db.exists("Item Naming Rule", existing):
                 continue
             if not frappe.db.get_value("Item Group", existing, "is_group"):
                 frappe.db.set_value("Item Group", existing, "is_group", 1)
@@ -53,7 +53,7 @@ def create_default_item_rules():
 
         frappe.get_doc(
             {
-                "doctype": "RIC Naming Rule",
+                "doctype": "Item Naming Rule",
                 "item_group": target,
                 "enabled": 1,
                 "prefix": prefix,

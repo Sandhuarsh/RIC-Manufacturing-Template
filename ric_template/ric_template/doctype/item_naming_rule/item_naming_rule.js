@@ -1,4 +1,4 @@
-frappe.ui.form.on("RIC Naming Rule", {
+frappe.ui.form.on("Item Naming Rule", {
 	refresh(frm) {
 		frm.set_intro(
 			__(

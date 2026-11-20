@@ -34,7 +34,7 @@ def get_rule_info(item_group):
     if not rule_name:
         return None
 
-    rule = frappe.get_doc("RIC Naming Rule", rule_name)
+    rule = frappe.get_doc("Item Naming Rule", rule_name)
     return {
         "rule": rule.name,
         "inherited": rule.item_group != item_group,

@@ -2,7 +2,7 @@
 
 How it works
 ------------
-An enabled ``RIC Naming Rule`` is attached to an Item Group (normally a Level 1
+An enabled ``Item Naming Rule`` is attached to an Item Group (normally a Level 1
 group such as "Finished Product"). When a new Item is saved without an item
 code, the nearest rule found on the item's group or any of its parent groups is
 used to build the code:
@@ -22,7 +22,7 @@ from frappe import _
 from frappe.utils import cint
 from frappe.utils.nestedset import get_ancestors_of
 
-RULE_DOCTYPE = "RIC Naming Rule"
+RULE_DOCTYPE = "Item Naming Rule"
 SETTINGS_DOCTYPE = "RIC Template Settings"
 
 

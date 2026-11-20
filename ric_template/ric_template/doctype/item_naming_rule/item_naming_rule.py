@@ -4,7 +4,7 @@ from frappe.model.document import Document
 from frappe.utils import cint
 
 
-class RICNamingRule(Document):
+class ItemNamingRule(Document):
     def validate(self):
         self.prefix = (self.prefix or "").strip()
 
@@ -29,7 +29,7 @@ class RICNamingRule(Document):
     def validate_overlap(self):
         """Two rules with the same prefix must not share numbers, or codes could clash."""
         others = frappe.get_all(
-            "RIC Naming Rule",
+            "Item Naming Rule",
             filters={"prefix": self.prefix, "name": ["!=", self.name or ""], "enabled": 1},
             fields=["name", "start_number", "end_number"],
         )

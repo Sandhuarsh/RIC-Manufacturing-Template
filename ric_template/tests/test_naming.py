@@ -22,12 +22,12 @@ class TestRICItemNaming(FrappeTestCase):
                 ).insert()
         frappe.db.set_value("Item Group", "RICTEST Level 2", "ric_abbr", "ABC")
 
-        if frappe.db.exists("RIC Naming Rule", "RICTEST Level 1"):
-            frappe.delete_doc("RIC Naming Rule", "RICTEST Level 1", force=True)
+        if frappe.db.exists("Item Naming Rule", "RICTEST Level 1"):
+            frappe.delete_doc("Item Naming Rule", "RICTEST Level 1", force=True)
 
         self.rule = frappe.get_doc(
             {
-                "doctype": "RIC Naming Rule",
+                "doctype": "Item Naming Rule",
                 "item_group": "RICTEST Level 1",
                 "prefix": "TT-",
                 "use_subgroup_abbr": 1,
@@ -69,7 +69,7 @@ class TestRICItemNaming(FrappeTestCase):
     def test_overlapping_range_rejected(self):
         other = frappe.get_doc(
             {
-                "doctype": "RIC Naming Rule",
+                "doctype": "Item Naming Rule",
                 "item_group": "All Item Groups",
                 "prefix": "TT-",
                 "start_number": 501,
