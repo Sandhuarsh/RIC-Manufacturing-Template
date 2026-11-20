@@ -107,3 +107,59 @@ def create_default_return_note_rules():
         created.append(label)
 
     return created
+
+
+# ---------------------------------------------------------------------------
+# Print formats
+# ---------------------------------------------------------------------------
+import json
+import os
+
+PRINT_FORMAT_DIR = os.path.join(os.path.dirname(__file__), "print_formats")
+
+
+def create_default_print_formats():
+    """Create the standard MSME print formats from ``print_formats/*.html``.
+
+    A format is only created when no Print Format with that name exists, so formats a
+    site has already edited are never overwritten. Formats for a document type the site
+    does not have are skipped. Returns the names created.
+    """
+    with open(os.path.join(PRINT_FORMAT_DIR, "index.json"), encoding="utf-8") as index_file:
+        index = json.load(index_file)
+
+    created = []
+    for entry in index:
+        if frappe.db.exists("Print Format", entry["name"]):
+            continue
+        if not frappe.db.exists("DocType", entry["doc_type"]):
+            continue
+
+        with open(os.path.join(PRINT_FORMAT_DIR, entry["file"]), encoding="utf-8") as html_file:
+            html = html_file.read()
+
+        frappe.get_doc(
+            {
+                "doctype": "Print Format",
+                "name": entry["name"],
+                "doc_type": entry["doc_type"],
+                "module": entry["module"],
+                "print_format_for": "DocType",
+                "standard": "No",
+                "custom_format": 1,
+                "print_format_type": "Jinja",
+                "pdf_generator": "wkhtmltopdf",
+                "default_print_language": "en",
+                "margin_top": 8,
+                "margin_bottom": 10,
+                "margin_left": 8,
+                "margin_right": 8,
+                "page_number": "Bottom Center",
+                "font_size": 0,
+                "disabled": 0,
+                "html": html,
+            }
+        ).insert(ignore_permissions=True)
+        created.append(entry["name"])
+
+    return created

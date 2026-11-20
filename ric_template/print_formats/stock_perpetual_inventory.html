@@ -1,0 +1,47 @@
+{%- set co = frappe.get_doc('Company', doc.company) -%}
+{%- set lh = letter_head if letter_head is defined else '' -%}
+{%- macro fm(v) -%}{{ frappe.utils.fmt_money(v or 0, currency=None) }}{%- endmacro -%}
+{%- set sle = frappe.get_all('Stock Ledger Entry', filters={'voucher_type': doc.doctype, 'voucher_no': doc.name, 'is_cancelled': 0}, fields=['item_code', 'warehouse', 'actual_qty', 'valuation_rate', 'stock_value_difference', 'qty_after_transaction', 'stock_value'], order_by='creation asc') -%}
+{%- set gl = frappe.get_all('GL Entry', filters={'voucher_type': doc.doctype, 'voucher_no': doc.name, 'is_cancelled': 0}, fields=['account', 'debit', 'credit', 'cost_center'], order_by='creation asc') -%}
+{%- set gd = namespace(d=0, c=0) -%}{%- for g in gl -%}{%- set gd.d = gd.d + g.debit -%}{%- set gd.c = gd.c + g.credit -%}{%- endfor -%}
+{%- set tv = namespace(v=0) -%}{%- for it in doc.items -%}{%- set tv.v = tv.v + (it.amount or it.basic_amount or 0) -%}{%- endfor -%}
+<style>
+.ric{font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#111;line-height:1.3}
+.ric table{width:100%;border-collapse:collapse}
+.ric td,.ric th{vertical-align:top;padding:0}
+.ric .b{font-weight:bold}.ric .r{text-align:right}.ric .c{text-align:center}.ric .nw{white-space:nowrap}
+.ric .lbl{font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.3px;display:block}
+.ric .bx{border:1px solid #222}
+.ric .bx td{padding:4px 7px}
+.ric .ttl{background:#1f3a5f;color:#fff;font-size:14px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;padding:5px 8px}
+.ric .sec{background:#e8edf3;border:1px solid #222;padding:3px 6px;font-weight:bold;font-size:9.5px;margin-top:6px}
+.ric .it th{background:#f3f6f9;border:1px solid #222;padding:3px;font-size:9px;text-align:center}
+.ric .it td{border:1px solid #222;padding:3px 4px}
+.ric .sm{font-size:8.5px;color:#444}
+.ric .sg td{height:46px;border:1px solid #222;padding:4px 7px}
+.ric tr{page-break-inside:avoid}.ric thead{display:table-header-group}
+</style>
+<div class='ric'>{%- if lh -%}<div class='ric-letterhead' style='margin-bottom:6px'>{{ lh }}</div>{%- endif -%}
+{%- if not lh -%}
+<table style='margin-bottom:5px'><tr><td style='width:62%'><div style='font-size:15px;font-weight:bold'>{{ doc.company }}</div><div>{% if co.pan %}PAN: <b>{{ co.pan }}</b>{% endif %}</div></td><td></td></tr></table>
+{%- endif -%}
+<table><tr><td class='ttl'>{{ doc.select_print_heading or 'Stock Voucher - Perpetual Inventory' }}</td></tr></table>
+<table class='bx' style='border-top:0'><tr><td style='width:25%;border-right:1px solid #222'><span class='lbl'>Voucher No.</span><b>{{ doc.name }}</b></td><td style='width:25%;border-right:1px solid #222'><span class='lbl'>Posting Date</span><b>{{ doc.get_formatted('posting_date') }}</b></td><td style='width:25%;border-right:1px solid #222'><span class='lbl'>Entry Type</span><b>{{ doc.stock_entry_type or doc.purpose }}</b></td><td><span class='lbl'>Status</span><b>{{ 'Posted' if doc.docstatus == 1 else ('Cancelled' if doc.docstatus == 2 else 'Draft (not posted)') }}</b></td></tr><tr><td style='border-top:1px solid #222;border-right:1px solid #222'><span class='lbl'>From Warehouse</span><b>{{ doc.from_warehouse or '-' }}</b></td><td style='border-top:1px solid #222;border-right:1px solid #222'><span class='lbl'>To Warehouse</span><b>{{ doc.to_warehouse or '-' }}</b></td><td style='border-top:1px solid #222;border-right:1px solid #222'><span class='lbl'>Total Value</span><b>{{ fm(tv.v) }}</b></td><td style='border-top:1px solid #222'><span class='lbl'>Prepared By</span><b>{{ doc.owner }}</b></td></tr></table>
+<div class='sec'>1. Items Moved</div>
+<table class='it'><thead><tr><th style='width:4%'>Sr</th><th style='width:32%'>Item</th><th style='width:14%'>Source</th><th style='width:14%'>Target</th><th style='width:9%'>Qty</th><th style='width:11%'>Rate</th><th style='width:16%'>Value</th></tr></thead><tbody>
+{%- for it in doc.items -%}
+<tr><td class='c'>{{ loop.index }}</td><td><b>{{ it.item_name }}</b> <span class='sm'>({{ it.item_code }})</span></td><td>{{ it.s_warehouse or '-' }}</td><td>{{ it.t_warehouse or '-' }}</td><td class='r nw'>{{ it.qty }} {{ it.uom }}</td><td class='r'>{{ fm(it.valuation_rate or it.basic_rate) }}</td><td class='r'><b>{{ fm(it.amount or it.basic_amount) }}</b></td></tr>
+{%- endfor -%}
+</tbody></table>
+<div class='sec'>2. Stock Ledger Impact</div>
+<table class='it'><thead><tr><th style='width:30%'>Item</th><th style='width:20%'>Warehouse</th><th style='width:12%'>Qty Change</th><th style='width:12%'>Valuation Rate</th><th style='width:13%'>Value Change</th><th style='width:13%'>Balance Qty</th></tr></thead><tbody>
+{%- for s in sle -%}<tr><td>{{ s.item_code }}</td><td>{{ s.warehouse }}</td><td class='r'>{{ s.actual_qty }}</td><td class='r'>{{ fm(s.valuation_rate) }}</td><td class='r'>{{ fm(s.stock_value_difference) }}</td><td class='r'>{{ s.qty_after_transaction }}</td></tr>{%- else -%}<tr><td colspan='6' class='c sm' style='padding:8px'>Stock ledger entries are created when the voucher is submitted.</td></tr>{%- endfor -%}
+</tbody></table>
+<div class='sec'>3. Accounting Impact (Perpetual Inventory)</div>
+<table class='it'><thead><tr><th style='width:56%'>Account</th><th style='width:14%'>Cost Centre</th><th style='width:15%'>Debit</th><th style='width:15%'>Credit</th></tr></thead><tbody>
+{%- for g in gl -%}<tr><td>{{ g.account }}</td><td>{{ g.cost_center or '' }}</td><td class='r'>{{ fm(g.debit) if g.debit else '' }}</td><td class='r'>{{ fm(g.credit) if g.credit else '' }}</td></tr>{%- else -%}<tr><td colspan='4' class='c sm' style='padding:8px'>No accounting entries (internal movement within the same account, or voucher not yet submitted).</td></tr>{%- endfor -%}
+{%- if gl -%}<tr><td colspan='2' class='r b'>Total</td><td class='r b'>{{ fm(gd.d) }}</td><td class='r b'>{{ fm(gd.c) }}</td></tr>{%- endif -%}
+</tbody></table>
+{%- if doc.remarks -%}<table class='bx' style='margin-top:6px'><tr><td><span class='lbl'>Remarks</span>{{ doc.remarks }}</td></tr></table>{%- endif -%}
+<table class='sg' style='margin-top:8px;page-break-inside:avoid'><tr><td style='width:25%'><span class='lbl'>Prepared By</span></td><td style='width:25%'><span class='lbl'>Store In-charge</span></td><td style='width:25%'><span class='lbl'>Accounts</span></td><td style='width:25%'><span class='lbl'>Approved By</span></td></tr></table>
+</div>

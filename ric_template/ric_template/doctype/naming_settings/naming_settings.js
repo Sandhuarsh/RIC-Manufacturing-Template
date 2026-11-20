@@ -28,6 +28,20 @@ frappe.ui.form.on("Naming Settings", {
 		);
 	},
 
+	create_default_print_formats(frm) {
+		frappe.confirm(
+			__(
+				"This creates the standard MSME print formats (Sales Order, Sales Invoice, Purchase Order, Delivery Note and others). Formats that already exist are not changed. Continue?"
+			),
+			() => {
+				frappe.call({
+					method: "ric_template.api.create_default_print_formats",
+					freeze: true,
+				});
+			}
+		);
+	},
+
 	open_numbering_rules(frm) {
 		frappe.set_route("List", "Item Naming Rule");
 	},

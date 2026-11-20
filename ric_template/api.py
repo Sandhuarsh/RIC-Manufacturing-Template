@@ -70,3 +70,17 @@ def create_default_item_rules():
     else:
         frappe.msgprint(_("All default rules already exist."), alert=True)
     return created
+
+
+@frappe.whitelist()
+def create_default_print_formats():
+    """Create the standard MSME print formats (existing formats are left untouched)."""
+    frappe.only_for("System Manager")
+    from ric_template.seed import create_default_print_formats as _create
+
+    created = _create()
+    if created:
+        frappe.msgprint(_("Created print formats: {0}").format(", ".join(created)), alert=True)
+    else:
+        frappe.msgprint(_("All default print formats already exist."), alert=True)
+    return created

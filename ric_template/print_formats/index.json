@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Sales Order",
+    "doc_type": "Sales Order",
+    "module": "Selling",
+    "file": "sales_order.html"
+  },
+  {
+    "name": "Sales Quotation",
+    "doc_type": "Quotation",
+    "module": "Selling",
+    "file": "sales_quotation.html"
+  },
+  {
+    "name": "Proforma Invoice - Customized",
+    "doc_type": "Sales Order",
+    "module": "Selling",
+    "file": "proforma_invoice_customized.html"
+  },
+  {
+    "name": "Sales Invoice Domestic",
+    "doc_type": "Sales Invoice",
+    "module": "Accounts",
+    "file": "sales_invoice_domestic.html"
+  },
+  {
+    "name": "Sales Invoice",
+    "doc_type": "Sales Invoice",
+    "module": "Accounts",
+    "file": "sales_invoice.html"
+  },
+  {
+    "name": "Delivery Note",
+    "doc_type": "Delivery Note",
+    "module": "Stock",
+    "file": "delivery_note.html"
+  },
+  {
+    "name": "Packing List",
+    "doc_type": "Delivery Note",
+    "module": "Stock",
+    "file": "packing_list.html"
+  },
+  {
+    "name": "Delivery Challan",
+    "doc_type": "Stock Entry",
+    "module": "Stock",
+    "file": "delivery_challan.html"
+  },
+  {
+    "name": "Purchase Order",
+    "doc_type": "Purchase Order",
+    "module": "Buying",
+    "file": "purchase_order.html"
+  },
+  {
+    "name": "Purchase Quotation",
+    "doc_type": "Supplier Quotation",
+    "module": "Buying",
+    "file": "purchase_quotation.html"
+  },
+  {
+    "name": "Request for Quotation",
+    "doc_type": "Request for Quotation",
+    "module": "Buying",
+    "file": "request_for_quotation.html"
+  },
+  {
+    "name": "Goods Receipt Note",
+    "doc_type": "Purchase Receipt",
+    "module": "Stock",
+    "file": "goods_receipt_note.html"
+  },
+  {
+    "name": "Material Request",
+    "doc_type": "Material Request",
+    "module": "Stock",
+    "file": "material_request.html"
+  },
+  {
+    "name": "Stock Perpetual Inventory",
+    "doc_type": "Stock Entry",
+    "module": "Stock",
+    "file": "stock_perpetual_inventory.html"
+  }
+]

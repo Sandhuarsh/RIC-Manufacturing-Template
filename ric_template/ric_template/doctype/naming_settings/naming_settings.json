@@ -10,7 +10,8 @@
   "setup_section",
   "create_default_item_rules",
   "create_default_return_note_rules",
-  "open_numbering_rules"
+  "open_numbering_rules",
+  "create_default_print_formats"
  ],
  "fields": [
   {
@@ -49,6 +50,11 @@
    "fieldname": "open_numbering_rules",
    "fieldtype": "Button",
    "label": "Open Numbering Rules"
+  },
+  {
+   "fieldname": "create_default_print_formats",
+   "fieldtype": "Button",
+   "label": "Create Default Print Formats"
   }
  ],
  "index_web_pages_for_search": 1,

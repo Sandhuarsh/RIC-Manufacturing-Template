@@ -1,0 +1,39 @@
+{%- set co = frappe.get_doc('Company', doc.company) -%}
+{%- set lh = letter_head if letter_head is defined else '' -%}
+{%- set cad = frappe.get_all('Dynamic Link', filters={'link_doctype': 'Company', 'link_name': doc.company, 'parenttype': 'Address'}, fields=['parent'], limit=1) -%}
+{%- set ca = frappe.get_doc('Address', cad[0].parent) if cad else none -%}
+{%- macro addr(a) -%}{%- if a -%}{{ a.address_line1 }}{% if a.address_line2 %}, {{ a.address_line2 }}{% endif %}{% if a.city %}, {{ a.city }}{% endif %}{% if a.pincode %} - {{ a.pincode }}{% endif %}{% if a.state %}, {{ a.state }}{% endif %}{%- endif -%}{%- endmacro -%}
+{%- set diffdate = [] -%}{%- for it in doc.items -%}{%- if it.schedule_date and it.schedule_date != doc.schedule_date -%}{%- set _ = diffdate.append(1) -%}{%- endif -%}{%- endfor -%}
+<style>
+.ric{font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#111;line-height:1.3}
+.ric table{width:100%;border-collapse:collapse}
+.ric td,.ric th{vertical-align:top;padding:0}
+.ric .b{font-weight:bold}.ric .r{text-align:right}.ric .c{text-align:center}.ric .nw{white-space:nowrap}
+.ric .lbl{font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.3px;display:block}
+.ric .bx{border:1px solid #222}
+.ric .bx td{padding:4px 7px}
+.ric .ttl{background:#1f3a5f;color:#fff;font-size:14px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;padding:5px 8px}
+.ric .meta td{border-bottom:1px solid #bbb;padding:3px 6px}
+.ric .it th{background:#e8edf3;border:1px solid #222;padding:4px;font-size:9px;text-align:center}
+.ric .it td{border:1px solid #222;padding:4px}
+.ric .sm{font-size:8.5px;color:#444}
+.ric .sg td{height:52px;border:1px solid #222;padding:4px 7px}
+.ric tr{page-break-inside:avoid}.ric thead{display:table-header-group}
+</style>
+<div class='ric'>{%- if lh -%}<div class='ric-letterhead' style='margin-bottom:6px'>{{ lh }}</div>{%- endif -%}
+{%- if not lh -%}
+<table style='margin-bottom:5px'><tr><td style='width:62%'>{% if co.company_logo %}<img src='{{ co.company_logo }}' style='max-height:56px;max-width:140px;float:left;margin-right:10px'>{% endif %}<div style='font-size:15px;font-weight:bold'>{{ doc.company }}</div><div>{{ addr(ca) }}</div><div>{% if ca and ca.gstin %}GSTIN: <b>{{ ca.gstin }}</b>{% endif %}{% if co.pan %} &nbsp; PAN: <b>{{ co.pan }}</b>{% endif %}</div></td><td></td></tr></table>
+{%- endif -%}
+<table><tr><td class='ttl'>{{ doc.select_print_heading or 'Material Request' }}<span style='float:right;font-size:10px;font-weight:normal;letter-spacing:0;text-transform:none'>{{ doc.material_request_type }}</span></td></tr></table>
+<table class='bx' style='border-top:0'><tr>
+<td style='width:25%;border-right:1px solid #222'><span class='lbl'>Request No.</span><b>{{ doc.name }}</b></td><td style='width:25%;border-right:1px solid #222'><span class='lbl'>Request Date</span><b>{{ doc.get_formatted('transaction_date') }}</b></td><td style='width:25%;border-right:1px solid #222'><span class='lbl'>Required By</span><b>{{ doc.get_formatted('schedule_date') if doc.schedule_date else '-' }}</b></td><td style='width:25%'><span class='lbl'>Requested By</span><b>{{ doc.requested_by or doc.owner }}</b></td></tr>
+<tr><td style='border-top:1px solid #222;border-right:1px solid #222'><span class='lbl'>Type</span><b>{{ doc.material_request_type }}</b></td><td style='border-top:1px solid #222;border-right:1px solid #222'><span class='lbl'>Target Warehouse</span><b>{{ doc.set_warehouse or '-' }}</b></td><td style='border-top:1px solid #222;border-right:1px solid #222'><span class='lbl'>Source Warehouse</span><b>{{ doc.set_from_warehouse or '-' }}</b></td><td style='border-top:1px solid #222'><span class='lbl'>Status</span><b>{{ doc.status }}</b></td></tr></table>
+<table class='it' style='margin-top:6px'><thead><tr><th style='width:4%'>Sr</th><th style='width:{{ 34 if diffdate else 42 }}%'>Item / Specification</th><th style='width:9%'>Qty</th><th style='width:10%'>Stock Available</th>{% if diffdate %}<th style='width:9%'>Required By</th>{% endif %}<th style='width:16%'>Warehouse</th><th style='width:14%'>Remarks</th></tr></thead><tbody>
+{%- for it in doc.items -%}
+<tr><td class='c'>{{ loop.index }}</td><td><b>{{ it.item_name }}</b> <span class='sm'>({{ it.item_code }})</span>{% if it.description and (it.description|striptags|trim) != it.item_name %}<div class='sm'>{{ it.description|striptags|trim }}</div>{% endif %}{% if it.project %}<div class='sm'>Project: {{ it.project }}</div>{% endif %}</td><td class='r nw'><b>{{ it.get_formatted('qty') }}</b> {{ it.uom }}</td><td class='r'>{{ it.get_formatted('actual_qty') if it.actual_qty is not none else '' }}</td>{% if diffdate %}<td class='c nw'>{{ it.get_formatted('schedule_date') if it.schedule_date else '' }}</td>{% endif %}<td>{{ it.warehouse or '' }}</td><td></td></tr>
+{%- endfor -%}
+{%- if doc.items|length < 6 -%}<tr><td style='height:{{ (6 - doc.items|length) * 22 }}px'></td><td></td><td></td><td></td>{% if diffdate %}<td></td>{% endif %}<td></td><td></td></tr>{%- endif -%}
+<tr><td colspan='2' class='r b'>Total Qty</td><td class='r b'>{{ doc.get_formatted('total_qty') if doc.total_qty else '' }}</td><td colspan='{{ 4 if diffdate else 3 }}'></td></tr></tbody></table>
+{%- if doc.terms or doc.get('message_for_supplier') -%}<table class='bx' style='margin-top:6px'><tr><td><span class='lbl'>Remarks / Terms</span>{{ doc.terms or doc.message_for_supplier }}</td></tr></table>{%- endif -%}
+<table class='sg' style='margin-top:8px;page-break-inside:avoid'><tr><td style='width:25%'><span class='lbl'>Requested By</span></td><td style='width:25%'><span class='lbl'>Dept. Head Approval</span></td><td style='width:25%'><span class='lbl'>Store In-charge</span></td><td style='width:25%'><span class='lbl'>Purchase / Management Approval</span></td></tr></table>
+</div>

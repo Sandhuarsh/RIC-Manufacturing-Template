@@ -29,8 +29,16 @@ CUSTOM_FIELDS = {
 
 def after_install():
     ensure_custom_fields()
+    create_print_formats()
 
 
 def ensure_custom_fields():
     """Idempotent: also runs after every migrate so the field is never lost."""
     create_custom_fields(CUSTOM_FIELDS, update=True)
+
+
+def create_print_formats():
+    """Install the standard print formats; never overwrites existing ones."""
+    from ric_template.seed import create_default_print_formats
+
+    create_default_print_formats()
