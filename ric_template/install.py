@@ -15,6 +15,7 @@ CUSTOM_FIELDS = {
             "label": "Item Code Numbering",
             "fieldtype": "Section Break",
             "insert_after": "ric_abbr",
+            "depends_on": "eval:doc.is_group && !doc.__islocal",
         },
         {
             "fieldname": "ric_rule_html",
