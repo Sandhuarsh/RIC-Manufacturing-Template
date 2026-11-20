@@ -64,7 +64,7 @@ def _subgroup_abbr(rule, item_group):
     abbr = frappe.db.get_value("Item Group", item_group, "ric_abbr")
     if not abbr:
         frappe.throw(
-            _("Please set the RIC Abbreviation on Item Group {0}. Rule {1} needs it for the item code.").format(
+            _("Please set the Item Abbreviation on Item Group {0}. Rule {1} needs it for the item code.").format(
                 frappe.bold(item_group), frappe.bold(rule.name)
             ),
             title=_("Abbreviation Missing"),

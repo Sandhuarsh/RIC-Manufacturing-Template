@@ -4,7 +4,7 @@ CUSTOM_FIELDS = {
     "Item Group": [
         {
             "fieldname": "ric_abbr",
-            "label": "RIC Abbreviation",
+            "label": "Item Abbreviation",
             "fieldtype": "Data",
             "insert_after": "parent_item_group",
             "depends_on": "eval:!doc.is_group",

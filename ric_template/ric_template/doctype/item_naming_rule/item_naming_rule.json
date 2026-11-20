@@ -52,7 +52,7 @@
   },
   {
    "default": "0",
-   "description": "Adds the RIC Abbreviation of the item's own group after the prefix, for example IM-FG-HYD-100001",
+   "description": "Adds the Item Abbreviation of the item's own group after the prefix, for example IM-FG-HYD-100001",
    "fieldname": "use_subgroup_abbr",
    "fieldtype": "Check",
    "label": "Include Sub-Group Abbreviation"
