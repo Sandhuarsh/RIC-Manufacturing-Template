@@ -12,7 +12,7 @@ CUSTOM_FIELDS = {
         },
         {
             "fieldname": "ric_numbering_section",
-            "label": "Item Code Numbering (RIC)",
+            "label": "Item Code Numbering",
             "fieldtype": "Section Break",
             "insert_after": "ric_abbr",
         },

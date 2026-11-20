@@ -19,7 +19,7 @@ frappe.ui.form.on("Item Group", {
 					);
 					frm.add_custom_button(__("Create Numbering Rule"), () => {
 						frappe.new_doc("Item Naming Rule", { item_group: frm.doc.name });
-					}, __("RIC"));
+					}, __("Item Naming"));
 					return;
 				}
 
@@ -39,7 +39,7 @@ frappe.ui.form.on("Item Group", {
 
 				frm.add_custom_button(__("Open Numbering Rule"), () => {
 					frappe.set_route("Form", "Item Naming Rule", info.rule);
-				}, __("RIC"));
+				}, __("Item Naming"));
 			});
 	},
 });
