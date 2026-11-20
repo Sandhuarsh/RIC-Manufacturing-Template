@@ -2,7 +2,15 @@
 frappe.ui.form.on("Item Group", {
 	refresh(frm) {
 		const field = frm.fields_dict.ric_rule_html;
-		if (!field || frm.is_new()) {
+		if (!field) {
+			return;
+		}
+
+		// Always start clean so nothing from a previously opened group is left behind.
+		field.$wrapper.empty();
+
+		// Only saved parent groups (Is Group ticked) show the panel.
+		if (frm.is_new() || !frm.doc.is_group) {
 			return;
 		}
 
