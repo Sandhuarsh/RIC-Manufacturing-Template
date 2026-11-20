@@ -1,5 +1,5 @@
 from frappe.model.document import Document
 
 
-class RICTemplateSettings(Document):
+class NamingSettings(Document):
     pass

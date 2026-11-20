@@ -6,7 +6,11 @@
  "field_order": [
   "item_section",
   "block_duplicate_item_name",
-  "lock_item_group_after_creation"
+  "lock_item_group_after_creation",
+  "setup_section",
+  "create_default_item_rules",
+  "create_default_return_note_rules",
+  "open_numbering_rules"
  ],
  "fields": [
   {
@@ -16,26 +20,44 @@
   },
   {
    "default": "1",
-   "description": "Stops two items from having the same Item Name.",
    "fieldname": "block_duplicate_item_name",
    "fieldtype": "Check",
    "label": "Block Duplicate Item Names"
   },
   {
    "default": "1",
-   "description": "Once a code has been generated from an Item Group rule, the group cannot be changed, so codes always match their group.",
    "fieldname": "lock_item_group_after_creation",
    "fieldtype": "Check",
    "label": "Lock Item Group After Creation"
+  },
+  {
+   "fieldname": "setup_section",
+   "fieldtype": "Section Break",
+   "label": "Quick Setup"
+  },
+  {
+   "fieldname": "create_default_item_rules",
+   "fieldtype": "Button",
+   "label": "Create Default Item Rules"
+  },
+  {
+   "fieldname": "create_default_return_note_rules",
+   "fieldtype": "Button",
+   "label": "Create Credit/Debit Note Rules"
+  },
+  {
+   "fieldname": "open_numbering_rules",
+   "fieldtype": "Button",
+   "label": "Open Numbering Rules"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-11-19 10:00:00.000000",
+ "modified": "2026-11-20 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "RIC Template",
- "name": "RIC Template Settings",
+ "name": "Naming Settings",
  "owner": "Administrator",
  "permissions": [
   {

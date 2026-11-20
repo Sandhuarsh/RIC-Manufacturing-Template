@@ -23,7 +23,7 @@ from frappe.utils import cint
 from frappe.utils.nestedset import get_ancestors_of
 
 RULE_DOCTYPE = "Item Naming Rule"
-SETTINGS_DOCTYPE = "RIC Template Settings"
+SETTINGS_DOCTYPE = "Naming Settings"
 
 
 def get_setting(fieldname):
