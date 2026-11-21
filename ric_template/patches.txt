@@ -5,3 +5,4 @@
 # Patches added in this section will be executed after doctypes are migrated
 ric_template.patches.rename_ric_naming_rule
 ric_template.patches.rename_settings_doctype
+ric_template.patches.add_dashboards

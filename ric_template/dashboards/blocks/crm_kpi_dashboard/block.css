@@ -1,0 +1,143 @@
+/* ========================================================== Main dashboard ========================================================== */
+.crmkpi-dashboard { width: 100%; padding: 20px; box-sizing: border-box; border: 1px solid var(--border-color); border-radius: 14px; background: var(--card-bg); }
+/* ========================================================== Header ========================================================== */
+.crmkpi-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.crmkpi-eyebrow { margin-bottom: 3px; color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.crmkpi-title { color: var(--text-color); font-size: 21px; font-weight: 700; line-height: 1.3; }
+.crmkpi-meta { margin-top: 5px; color: var(--text-muted); font-size: 12px; }
+.crmkpi-badge { flex: 0 0 auto; padding: 7px 11px; border: 1px solid var(--border-color); border-radius: 999px; background: var(--control-bg); color: var(--text-muted); font-size: 11px; font-weight: 600; white-space: nowrap; }
+/* ========================================================== Filter bar ========================================================== */
+.crmkpi-filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; padding: 14px; margin-bottom: 20px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--control-bg); }
+.crmkpi-filter-field { display: flex; flex-direction: column; min-width: 130px; gap: 5px; }
+.crmkpi-filter-label { color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.crmkpi-input { padding: 6px 9px; border: 1px solid var(--border-color); border-radius: 7px; background: var(--card-bg); color: var(--text-color); font-size: 12px; outline: none; }
+.crmkpi-input:focus { border-color: #4c6ef5; }
+.crmkpi-filter-actions { display: flex; gap: 8px; margin-left: auto; }
+.crmkpi-btn { padding: 7px 14px; border: 1px solid var(--border-color); border-radius: 7px; background: var(--card-bg); color: var(--text-color); font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.crmkpi-btn:hover { border-color: var(--text-muted); }
+.crmkpi-btn-primary { border-color: #4c6ef5; background: #4c6ef5; color: #ffffff; }
+.crmkpi-btn-primary:hover { background: #4263eb; border-color: #4263eb; }
+/* ========================================================== KPI card grid ========================================================== */
+.crmkpi-kpi-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 20px; }
+.crmkpi-kpi { position: relative; min-width: 0; padding: 16px 16px 14px; box-sizing: border-box; overflow: hidden; border: 1px solid var(--border-color); border-radius: 12px; background: var(--control-bg); transition: transform 150ms ease, box-shadow 150ms ease; }
+.crmkpi-kpi:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); }
+.crmkpi-kpi::before { position: absolute; top: 0; right: 0; left: 0; height: 4px; content: ""; }
+.crmkpi-kpi-lead::before { background: #4c6ef5; }
+.crmkpi-kpi-win::before { background: #12b886; }
+.crmkpi-kpi-response::before { background: #15aabf; }
+.crmkpi-kpi-pipeline::before { background: #f59f00; }
+.crmkpi-kpi-cycle::before { background: #be4bdb; }
+.crmkpi-kpi-conversion-time::before { background: #e64980; }
+.crmkpi-kpi-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.crmkpi-kpi-group { margin-bottom: 4px; color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.crmkpi-kpi-label { color: var(--text-color); font-size: 13px; font-weight: 600; }
+.crmkpi-kpi-icon { display: flex; width: 27px; height: 27px; flex: 0 0 27px; align-items: center; justify-content: center; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-muted); font-size: 13px; font-weight: 700; }
+.crmkpi-kpi-amount { margin-top: 16px; color: var(--text-color); font-size: clamp(20px, 1.9vw, 28px); font-weight: 750; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; line-height: 1.15; }
+.crmkpi-kpi-sub { margin-top: 8px; padding-top: 9px; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 11px; line-height: 1.5; }
+.crmkpi-kpi-delta { margin-top: 6px; font-size: 11px; font-weight: 700; }
+.crmkpi-kpi-delta.is-up { color: #12b886; }
+.crmkpi-kpi-delta.is-down { color: #e03131; }
+.crmkpi-kpi-delta.is-flat { color: var(--text-muted); }
+/* ========================================================== Chart grid + cards ========================================================== */
+.crmkpi-chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.crmkpi-card { padding: 17px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--card-bg); }
+.crmkpi-card-wide { grid-column: 1 / -1; }
+.crmkpi-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 15px; margin-bottom: 14px; }
+.crmkpi-card-title { color: var(--text-color); font-size: 14px; font-weight: 700; }
+.crmkpi-card-subtitle { margin-top: 3px; color: var(--text-muted); font-size: 11px; }
+.crmkpi-empty { margin-top: 10px; padding: 10px 12px; border: 1px dashed var(--border-color); border-radius: 8px; color: var(--text-muted); font-size: 11px; text-align: center; }
+/* ========================================================== Horizontal bar list ========================================================== */
+.crmkpi-bar-row { display: grid; grid-template-columns: minmax(110px, 170px) minmax(100px, 1fr) minmax(80px, 110px); align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border-color); }
+.crmkpi-bar-row:last-child { border-bottom: 0; }
+.crmkpi-bar-label { overflow: hidden; color: var(--text-color); font-size: 12px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.crmkpi-bar-track { position: relative; width: 100%; height: 13px; overflow: hidden; border-radius: 999px; background: var(--control-bg); }
+.crmkpi-bar-fill { height: 100%; min-width: 2px; border-radius: 999px; background: #4c6ef5; transition: width 200ms ease; }
+.crmkpi-bar-value { color: var(--text-color); font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+/* ========================================================== Monthly grouped-bar chart ========================================================== */
+.crmkpi-monthly-chart { display: flex; align-items: flex-end; gap: 14px; height: 150px; padding: 6px 4px 0; border-bottom: 1px solid var(--border-color); }
+.crmkpi-month-col { display: flex; flex: 1 1 0; flex-direction: column; align-items: center; min-width: 30px; height: 100%; justify-content: flex-end; }
+.crmkpi-month-bars { display: flex; align-items: flex-end; justify-content: center; width: 100%; height: 100%; gap: 4px; }
+.crmkpi-month-bar { width: 14px; min-height: 2px; border-radius: 4px 4px 0 0; }
+.crmkpi-month-bar.is-leads { background: #4c6ef5; }
+.crmkpi-month-bar.is-converted { background: #12b886; }
+.crmkpi-month-bar.is-pipeline { background: #f59f00; }
+.crmkpi-month-label { margin-top: 6px; color: var(--text-muted); font-size: 10px; white-space: nowrap; }
+.crmkpi-legend { display: flex; gap: 16px; margin-top: 10px; }
+.crmkpi-legend-item { display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 11px; }
+.crmkpi-legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+/* ========================================================== Win / Loss comparison ========================================================== */
+.crmkpi-winloss { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.crmkpi-winloss-stat { padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; background: var(--control-bg); }
+.crmkpi-winloss-stat-label { color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.crmkpi-winloss-stat-value { margin-top: 6px; font-size: 22px; font-weight: 750; font-variant-numeric: tabular-nums; }
+.crmkpi-winloss-stat.is-won .crmkpi-winloss-stat-value { color: #12b886; }
+.crmkpi-winloss-stat.is-lost .crmkpi-winloss-stat-value { color: #e03131; }
+.crmkpi-winloss-stat-sub { margin-top: 4px; color: var(--text-muted); font-size: 11px; }
+.crmkpi-winloss-bar { display: flex; width: 100%; height: 10px; overflow: hidden; border-radius: 999px; margin-top: 12px; background: var(--control-bg); }
+.crmkpi-winloss-bar-won { background: #12b886; }
+.crmkpi-winloss-bar-lost { background: #e03131; }
+/* ========================================================== Data tables ========================================================== */
+.crmkpi-table-wrap { overflow-x: auto; }
+.crmkpi-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.crmkpi-table th { padding: 8px 10px; border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-align: left; text-transform: uppercase; white-space: nowrap; }
+.crmkpi-table td { padding: 8px 10px; border-bottom: 1px solid var(--border-color); color: var(--text-color); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.crmkpi-table tr:last-child td { border-bottom: 0; }
+.crmkpi-table td.crmkpi-cell-name { font-weight: 600; white-space: normal; }
+/* ========================================================== Supporting report links ========================================================== */
+.crmkpi-report-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.crmkpi-report-chip { padding: 7px 12px; border: 1px solid var(--border-color); border-radius: 999px; background: var(--control-bg); color: var(--text-color); font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.crmkpi-report-chip:hover { border-color: #4c6ef5; color: #4c6ef5; }
+/* ========================================================== Error message ========================================================== */
+.crmkpi-error { margin-top: 14px; padding: 10px 12px; border: 1px solid #ffa8a8; border-radius: 8px; background: #fff5f5; color: #c92a2a; font-size: 12px; }
+/* ========================================================== Medium screens ========================================================== */
+@media (max-width: 1100px) { .crmkpi-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .crmkpi-chart-grid { grid-template-columns: 1fr; } }
+/* ========================================================== Mobile screens ========================================================== */
+@media (max-width: 650px) { .crmkpi-dashboard { padding: 14px; } .crmkpi-header { flex-direction: column; } .crmkpi-filters { flex-direction: column; align-items: stretch; } .crmkpi-filter-field { min-width: 0; } .crmkpi-filter-actions { margin-left: 0; } .crmkpi-kpi-grid { grid-template-columns: 1fr; } .crmkpi-bar-row { grid-template-columns: 1fr; gap: 5px; } .crmkpi-bar-value { text-align: left; } .crmkpi-winloss { grid-template-columns: 1fr; } }
+
+/* Territory map: world choropleth + ranked list */
+.crmkpi-geo { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(260px, 1fr); gap: 24px; align-items: start; }
+.crmkpi-geo[hidden], .crmkpi-geo-tip[hidden], .crmkpi-geo-toggle[hidden], .crmkpi-table-wrap[hidden] { display: none; }
+.crmkpi-geo-map { position: relative; min-height: 160px; }
+.crmkpi-geo-map svg { display: block; width: 100%; height: auto; }
+.crmkpi-geo-map path, .crmkpi-geo-map circle { fill: var(--control-bg); stroke: var(--card-bg); stroke-width: 0.5; transition: fill 200ms ease; }
+.crmkpi-geo-map circle { stroke-width: 0; }
+.crmkpi-geo-map [data-active] { cursor: pointer; }
+.crmkpi-geo-map path[data-active]:hover { stroke: var(--text-color); stroke-width: 0.9; }
+.crmkpi-geo-tip { position: absolute; z-index: 2; padding: 6px 9px; border-radius: 7px; background: var(--text-color); color: var(--card-bg); font-size: 11px; line-height: 1.4; pointer-events: none; white-space: nowrap; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18); }
+.crmkpi-geo-tip strong { font-weight: 700; }
+.crmkpi-geo-head { display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.crmkpi-geo-row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto 70px; align-items: center; gap: 10px; padding: 11px 0 14px; border-bottom: 1px solid var(--border-color); }
+.crmkpi-geo-row:last-child { border-bottom: 0; }
+.crmkpi-geo-name { overflow: hidden; color: var(--text-color); font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.crmkpi-geo-name.is-unmapped { color: var(--text-muted); font-weight: 500; font-style: italic; }
+.crmkpi-geo-value { color: var(--text-color); font-size: 13px; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.crmkpi-geo-delta { font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.crmkpi-geo-delta.is-up { color: #2f9e44; }
+.crmkpi-geo-delta.is-down { color: #e03131; }
+.crmkpi-geo-delta.is-flat { color: var(--text-muted); }
+.crmkpi-geo-bar { position: absolute; left: 0; bottom: 5px; height: 3px; border-radius: 2px; background: #4c6ef5; }
+.crmkpi-geo-foot { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+.crmkpi-geo-note { color: var(--text-muted); font-size: 11px; }
+.crmkpi-geo-toggle { margin-left: auto; padding: 0; border: 0; background: none; color: #4c6ef5; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.crmkpi-geo-toggle:hover { text-decoration: underline; }
+@media (max-width: 900px) { .crmkpi-geo { grid-template-columns: 1fr; } }
+
+/* Territory map: zoom, pan, India states */
+.crmkpi-geo-map svg { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+.crmkpi-geo-map svg.is-dragging { cursor: grabbing; }
+.crmkpi-geo-map path, .crmkpi-geo-map circle { vector-effect: non-scaling-stroke; }
+.crmkpi-geo-map [data-layer="india-states"] path { fill: var(--control-bg); stroke: var(--card-bg); stroke-width: 0.8; }
+.crmkpi-geo-map [data-layer="india-states"] path[data-active] { stroke: var(--card-bg); }
+.crmkpi-geo-map [data-layer="india-states"] path:hover { stroke: var(--text-color); stroke-width: 1.1; }
+.crmkpi-geo-zoom { position: absolute; right: 8px; bottom: 8px; z-index: 1; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+.crmkpi-geo-zoom button { width: 30px; height: 28px; padding: 0; border: 0; background: var(--card-bg); color: var(--text-color); font-size: 16px; line-height: 1; cursor: pointer; }
+.crmkpi-geo-zoom button + button { border-top: 1px solid var(--border-color); }
+.crmkpi-geo-zoom button:hover { background: var(--control-bg); }
+.crmkpi-geo-zoom button[hidden], .crmkpi-geo-back[hidden] { display: none; }
+.crmkpi-geo-back { margin-bottom: 8px; padding: 0; border: 0; background: none; color: #4c6ef5; font-size: 12px; font-weight: 600; cursor: pointer; }
+.crmkpi-geo-back:hover { text-decoration: underline; }
+.crmkpi-geo-empty-row { padding: 14px 0; color: var(--text-muted); font-size: 12px; }
+.crmkpi-geo-credit { margin-top: 6px; color: var(--text-muted); font-size: 10px; }
+.crmkpi-geo-credit a { color: inherit; text-decoration: underline; }
+.crmkpi-geo-map svg > path, .crmkpi-geo-map svg > circle { transition: fill 200ms ease, opacity 200ms ease; }
+.crmkpi-geo-map svg.is-india-mode > path, .crmkpi-geo-map svg.is-india-mode > circle { opacity: 0.3; }

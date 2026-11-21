@@ -30,6 +30,7 @@ CUSTOM_FIELDS = {
 def after_install():
     ensure_custom_fields()
     create_print_formats()
+    create_dashboards()
 
 
 def ensure_custom_fields():
@@ -42,3 +43,10 @@ def create_print_formats():
     from ric_template.seed import create_default_print_formats
 
     create_default_print_formats()
+
+
+def create_dashboards():
+    """Install the CRM and Sales dashboards; never overwrites existing ones."""
+    from ric_template.dashboards.setup import install_dashboards
+
+    install_dashboards()

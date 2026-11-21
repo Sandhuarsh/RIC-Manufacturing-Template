@@ -84,3 +84,17 @@ def create_default_print_formats():
     else:
         frappe.msgprint(_("All default print formats already exist."), alert=True)
     return created
+
+
+@frappe.whitelist()
+def create_default_dashboards():
+    """Create the CRM and Sales dashboards, the CRM workspace and its desktop icon."""
+    frappe.only_for("System Manager")
+    from ric_template.dashboards.setup import install_dashboards
+
+    done = install_dashboards()
+    if done:
+        frappe.msgprint(_("Created: {0}").format(", ".join(done)), alert=True)
+    else:
+        frappe.msgprint(_("The dashboards already exist."), alert=True)
+    return done

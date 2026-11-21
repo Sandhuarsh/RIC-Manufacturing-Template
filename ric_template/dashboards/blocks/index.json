@@ -1,0 +1,20 @@
+[
+  {
+    "name": "CRM KPI Dashboard",
+    "dir": "crm_kpi_dashboard",
+    "roles": [
+      "Pre Sales",
+      "Sales Manager",
+      "Sales User",
+      "System Manager",
+      "Administrator"
+    ]
+  },
+  {
+    "name": "Sales Dashboard",
+    "dir": "sales_dashboard",
+    "roles": [
+      "Sales"
+    ]
+  }
+]

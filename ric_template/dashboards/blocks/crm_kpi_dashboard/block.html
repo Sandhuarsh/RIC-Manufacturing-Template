@@ -1,0 +1,263 @@
+<div class="crmkpi-dashboard">
+
+    <div class="crmkpi-header">
+        <div>
+            <div class="crmkpi-eyebrow">Live CRM metrics</div>
+            <div class="crmkpi-title">CRM KPI Dashboard</div>
+            <div class="crmkpi-meta" data-role="crmkpi-meta">Loading dashboard...</div>
+        </div>
+        <div class="crmkpi-badge" data-role="crmkpi-refresh-badge">Live</div>
+    </div>
+
+    <div class="crmkpi-filters">
+        <div class="crmkpi-filter-field">
+            <label class="crmkpi-filter-label">From</label>
+            <input type="date" class="crmkpi-input" data-role="crmkpi-from-date">
+        </div>
+        <div class="crmkpi-filter-field">
+            <label class="crmkpi-filter-label">To</label>
+            <input type="date" class="crmkpi-input" data-role="crmkpi-to-date">
+        </div>
+        <div class="crmkpi-filter-field">
+            <label class="crmkpi-filter-label">Company</label>
+            <select class="crmkpi-input" data-role="crmkpi-company">
+                <option value="">All Companies</option>
+            </select>
+        </div>
+        <div class="crmkpi-filter-field">
+            <label class="crmkpi-filter-label">Sales Person</label>
+            <select class="crmkpi-input" data-role="crmkpi-sales-person">
+                <option value="">All Sales Reps</option>
+            </select>
+        </div>
+        <div class="crmkpi-filter-field">
+            <label class="crmkpi-filter-label">Territory</label>
+            <select class="crmkpi-input" data-role="crmkpi-territory">
+                <option value="">All Territories</option>
+            </select>
+        </div>
+        <div class="crmkpi-filter-actions">
+            <button type="button" class="crmkpi-btn crmkpi-btn-primary" data-role="crmkpi-apply">Apply</button>
+            <button type="button" class="crmkpi-btn" data-role="crmkpi-reset">Reset</button>
+        </div>
+    </div>
+
+    <div class="crmkpi-kpi-grid">
+
+        <div class="crmkpi-kpi crmkpi-kpi-lead">
+            <div class="crmkpi-kpi-header">
+                <div>
+                    <div class="crmkpi-kpi-group">Leads</div>
+                    <div class="crmkpi-kpi-label">Lead Conversion Rate</div>
+                </div>
+                <div class="crmkpi-kpi-icon">%</div>
+            </div>
+            <div class="crmkpi-kpi-amount" data-value="lead_conversion_rate">&mdash;</div>
+            <div class="crmkpi-kpi-sub" data-value="lead_conversion_sub">&mdash;</div>
+            <div class="crmkpi-kpi-delta" data-value="lead_conversion_delta"></div>
+        </div>
+
+        <div class="crmkpi-kpi crmkpi-kpi-win">
+            <div class="crmkpi-kpi-header">
+                <div>
+                    <div class="crmkpi-kpi-group">Opportunities</div>
+                    <div class="crmkpi-kpi-label">Opportunity Win Rate</div>
+                </div>
+                <div class="crmkpi-kpi-icon">W</div>
+            </div>
+            <div class="crmkpi-kpi-amount" data-value="win_rate">&mdash;</div>
+            <div class="crmkpi-kpi-sub" data-value="win_rate_sub">&mdash;</div>
+        </div>
+
+        <div class="crmkpi-kpi crmkpi-kpi-response">
+            <div class="crmkpi-kpi-header">
+                <div>
+                    <div class="crmkpi-kpi-group">Responsiveness</div>
+                    <div class="crmkpi-kpi-label">Avg First Response Time</div>
+                </div>
+                <div class="crmkpi-kpi-icon">&#9201;</div>
+            </div>
+            <div class="crmkpi-kpi-amount" data-value="first_response">&mdash;</div>
+            <div class="crmkpi-kpi-sub" data-value="first_response_sub">&mdash;</div>
+        </div>
+
+        <div class="crmkpi-kpi crmkpi-kpi-pipeline">
+            <div class="crmkpi-kpi-header">
+                <div>
+                    <div class="crmkpi-kpi-group">Pipeline</div>
+                    <div class="crmkpi-kpi-label">Sales Pipeline Value</div>
+                </div>
+                <div class="crmkpi-kpi-icon">&#8377;</div>
+            </div>
+            <div class="crmkpi-kpi-amount" data-value="pipeline_value">&mdash;</div>
+            <div class="crmkpi-kpi-sub" data-value="pipeline_value_sub">&mdash;</div>
+        </div>
+
+        <div class="crmkpi-kpi crmkpi-kpi-cycle">
+            <div class="crmkpi-kpi-header">
+                <div>
+                    <div class="crmkpi-kpi-group">Velocity</div>
+                    <div class="crmkpi-kpi-label">Avg Sales Cycle Length</div>
+                </div>
+                <div class="crmkpi-kpi-icon">&#8635;</div>
+            </div>
+            <div class="crmkpi-kpi-amount" data-value="sales_cycle">&mdash;</div>
+            <div class="crmkpi-kpi-sub" data-value="sales_cycle_sub">&mdash;</div>
+        </div>
+
+        <div class="crmkpi-kpi crmkpi-kpi-conversion-time">
+            <div class="crmkpi-kpi-header">
+                <div>
+                    <div class="crmkpi-kpi-group">Conversion</div>
+                    <div class="crmkpi-kpi-label">Lead&rarr;Customer Time</div>
+                </div>
+                <div class="crmkpi-kpi-icon">&#8594;</div>
+            </div>
+            <div class="crmkpi-kpi-amount" data-value="lead_to_customer">&mdash;</div>
+            <div class="crmkpi-kpi-sub" data-value="lead_to_customer_sub">&mdash;</div>
+        </div>
+
+    </div>
+
+
+    <div class="crmkpi-chart-grid">
+
+        <div class="crmkpi-card">
+            <div class="crmkpi-card-header">
+                <div>
+                    <div class="crmkpi-card-title">Lead Conversion Trend</div>
+                    <div class="crmkpi-card-subtitle">Leads created vs. converted, by month</div>
+                </div>
+            </div>
+            <div class="crmkpi-monthly-chart" data-role="crmkpi-lead-trend"></div>
+            <div class="crmkpi-empty" data-role="crmkpi-lead-trend-empty" hidden>No leads in this range.</div>
+            <div class="crmkpi-legend">
+                <span class="crmkpi-legend-item"><span class="crmkpi-legend-dot" style="background:#4c6ef5"></span>Leads</span>
+                <span class="crmkpi-legend-item"><span class="crmkpi-legend-dot" style="background:#12b886"></span>Converted</span>
+            </div>
+        </div>
+
+        <div class="crmkpi-card">
+            <div class="crmkpi-card-header">
+                <div>
+                    <div class="crmkpi-card-title">Opportunity Funnel by Sales Stage</div>
+                    <div class="crmkpi-card-subtitle">All opportunities in range, any status</div>
+                </div>
+            </div>
+            <div class="crmkpi-bar-list" data-role="crmkpi-funnel"></div>
+            <div class="crmkpi-empty" data-role="crmkpi-funnel-empty" hidden>No opportunities in this range.</div>
+        </div>
+
+        <div class="crmkpi-card">
+            <div class="crmkpi-card-header">
+                <div>
+                    <div class="crmkpi-card-title">Win / Loss</div>
+                    <div class="crmkpi-card-subtitle">Closed opportunities in range</div>
+                </div>
+            </div>
+            <div class="crmkpi-winloss" data-role="crmkpi-winloss"></div>
+            <div class="crmkpi-winloss-bar" data-role="crmkpi-winloss-bar"></div>
+            <div class="crmkpi-empty" data-role="crmkpi-winloss-empty" hidden>No won or lost opportunities in this range.</div>
+        </div>
+
+        <div class="crmkpi-card">
+            <div class="crmkpi-card-header">
+                <div>
+                    <div class="crmkpi-card-title">Sales Pipeline by Stage</div>
+                    <div class="crmkpi-card-subtitle">Open opportunities only, by value</div>
+                </div>
+            </div>
+            <div class="crmkpi-bar-list" data-role="crmkpi-pipeline-stage"></div>
+            <div class="crmkpi-empty" data-role="crmkpi-pipeline-stage-empty" hidden>No open pipeline in this range.</div>
+        </div>
+
+        <div class="crmkpi-card">
+            <div class="crmkpi-card-header">
+                <div>
+                    <div class="crmkpi-card-title">Sales Pipeline Trend</div>
+                    <div class="crmkpi-card-subtitle">Open pipeline value, by month created</div>
+                </div>
+            </div>
+            <div class="crmkpi-monthly-chart" data-role="crmkpi-pipeline-trend"></div>
+            <div class="crmkpi-empty" data-role="crmkpi-pipeline-trend-empty" hidden>No open pipeline in this range.</div>
+        </div>
+
+        <div class="crmkpi-card">
+            <div class="crmkpi-card-header">
+                <div>
+                    <div class="crmkpi-card-title">Lead Source Performance</div>
+                    <div class="crmkpi-card-subtitle">Leads and conversion rate by source</div>
+                </div>
+            </div>
+            <div class="crmkpi-bar-list" data-role="crmkpi-lead-source"></div>
+            <div class="crmkpi-empty" data-role="crmkpi-lead-source-empty" hidden>No leads in this range.</div>
+        </div>
+
+        <div class="crmkpi-card crmkpi-card-wide">
+            <div class="crmkpi-card-header">
+                <div>
+                    <div class="crmkpi-card-title">Sales Person Performance</div>
+                    <div class="crmkpi-card-subtitle">Based on lead / opportunity owner</div>
+                </div>
+            </div>
+            <div class="crmkpi-table-wrap" data-role="crmkpi-sales-person-table"></div>
+            <div class="crmkpi-empty" data-role="crmkpi-sales-person-empty" hidden>No activity in this range.</div>
+        </div>
+
+        <div class="crmkpi-card crmkpi-card-wide">
+            <div class="crmkpi-card-header">
+                <div>
+                    <div class="crmkpi-card-title">Territory Performance</div>
+                    <div class="crmkpi-card-subtitle">Leads, opportunities and pipeline by territory &middot; zoom into India for states</div>
+                </div>
+                <select class="crmkpi-input" data-role="crmkpi-geo-metric" aria-label="Metric">
+                    <option value="leads">Leads</option>
+                    <option value="opportunities">Opportunities</option>
+                    <option value="won">Won</option>
+                    <option value="pipeline_value">Pipeline Value</option>
+                </select>
+            </div>
+            <div class="crmkpi-geo" data-role="crmkpi-geo">
+                <div class="crmkpi-geo-map" data-role="crmkpi-geo-map">
+                    <div class="crmkpi-geo-zoom">
+                        <button type="button" data-role="crmkpi-geo-zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
+                        <button type="button" data-role="crmkpi-geo-zoom-out" aria-label="Zoom out" title="Zoom out">&minus;</button>
+                        <button type="button" data-role="crmkpi-geo-zoom-reset" aria-label="Reset view" title="Reset view" hidden>&#10227;</button>
+                    </div>
+                    <div class="crmkpi-geo-tip" data-role="crmkpi-geo-tip" hidden></div>
+                </div>
+                <div class="crmkpi-geo-list">
+                    <button type="button" class="crmkpi-geo-back" data-role="crmkpi-geo-back" hidden>&larr; All territories</button>
+                    <div class="crmkpi-geo-head">
+                        <span data-role="crmkpi-geo-dimension">Territory</span>
+                        <span data-role="crmkpi-geo-metric-label">Leads</span>
+                    </div>
+                    <div data-role="crmkpi-geo-rows"></div>
+                </div>
+            </div>
+            <div class="crmkpi-table-wrap" data-role="crmkpi-territory-table" hidden></div>
+            <div class="crmkpi-empty" data-role="crmkpi-territory-empty" hidden>No activity in this range.</div>
+            <div class="crmkpi-geo-foot">
+                <span class="crmkpi-geo-note" data-role="crmkpi-geo-note"></span>
+                <button type="button" class="crmkpi-geo-toggle" data-role="crmkpi-geo-toggle">View table &rarr;</button>
+            </div>
+            <div class="crmkpi-geo-credit">Map data: <a href="https://www.naturalearthdata.com" target="_blank" rel="noopener noreferrer">Natural Earth</a> &middot; India states &copy; <a href="https://github.com/datameet/maps" target="_blank" rel="noopener noreferrer">DataMeet</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>, simplified</div>
+        </div>
+
+    </div>
+
+
+    <div class="crmkpi-card">
+        <div class="crmkpi-card-header">
+            <div>
+                <div class="crmkpi-card-title">Supporting Reports</div>
+                <div class="crmkpi-card-subtitle">Native ERPNext reports for deeper drill-down</div>
+            </div>
+        </div>
+        <div class="crmkpi-report-links" data-role="crmkpi-report-links"></div>
+    </div>
+
+
+    <div class="crmkpi-error" data-role="crmkpi-error" hidden></div>
+
+</div>

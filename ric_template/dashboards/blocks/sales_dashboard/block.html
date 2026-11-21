@@ -1,0 +1,144 @@
+<div class="sd-dashboard">
+
+    <div class="sd-topbar">
+        <div>
+            <div class="sd-eyebrow" data-role="sd-date">&nbsp;</div>
+            <h1 class="sd-greeting" data-role="sd-greeting">Sales Dashboard</h1>
+            <div class="sd-meta" data-role="sd-meta">Loading live sales data...</div>
+        </div>
+        <div class="sd-top-actions">
+            <div class="sd-period-pill" data-role="sd-period">&nbsp;</div>
+            <button type="button" class="sd-btn" data-role="sd-print">Download / Print</button>
+        </div>
+    </div>
+
+    <div class="sd-filters">
+        <div class="sd-field"><label>From</label><input type="date" class="sd-input" data-role="sd-from"></div>
+        <div class="sd-field"><label>To</label><input type="date" class="sd-input" data-role="sd-to"></div>
+        <div class="sd-field"><label>Company</label><select class="sd-input" data-role="sd-company"><option value="">All Companies</option></select></div>
+        <div class="sd-field"><label>Sales Person</label><select class="sd-input" data-role="sd-person"><option value="">All Sales Persons</option></select></div>
+        <div class="sd-field" data-role="sd-territory-field" hidden><label>Territory</label><select class="sd-input" data-role="sd-territory"><option value="">All Territories</option></select></div>
+        <div class="sd-actions">
+            <button type="button" class="sd-btn sd-btn-primary" data-role="sd-apply">Apply</button>
+            <button type="button" class="sd-btn" data-role="sd-reset">Reset</button>
+        </div>
+    </div>
+
+    <div class="sd-links" data-role="sd-links"></div>
+
+    <section class="sd-kpis" data-role="sd-kpis"></section>
+
+    <section class="sd-grid-top">
+        <div class="sd-panel">
+            <div class="sd-panel-head">
+                <div>
+                    <div class="sd-panel-title">Revenue Trend</div>
+                    <div class="sd-panel-sub">Invoiced net revenue by month</div>
+                </div>
+                <div class="sd-legend" data-role="sd-trend-legend"></div>
+            </div>
+            <div data-role="sd-trend"></div>
+        </div>
+
+        <div class="sd-panel sd-attn">
+            <div class="sd-panel-head">
+                <div>
+                    <div class="sd-panel-title">Needs Your Attention</div>
+                    <div class="sd-panel-sub" data-role="sd-attn-sub">&nbsp;</div>
+                </div>
+            </div>
+            <div class="sd-attn-list" data-role="sd-attn"></div>
+        </div>
+    </section>
+
+    <section class="sd-grid-two">
+        <div class="sd-panel">
+            <div class="sd-panel-head">
+                <div>
+                    <div class="sd-panel-title">Orders Booked vs Invoiced</div>
+                    <div class="sd-panel-sub">Sales orders confirmed against invoices raised, by month</div>
+                </div>
+                <div class="sd-legend" data-role="sd-flow-legend"></div>
+            </div>
+            <div data-role="sd-flow"></div>
+        </div>
+
+        <div class="sd-panel">
+            <div class="sd-panel-head">
+                <div>
+                    <div class="sd-panel-title">Receivables Aging</div>
+                    <div class="sd-panel-sub">Outstanding invoices by days past due, as of today</div>
+                </div>
+            </div>
+            <div data-role="sd-aging"></div>
+        </div>
+    </section>
+
+    <section class="sd-grid-three">
+        <div class="sd-panel">
+            <div class="sd-panel-head">
+                <div>
+                    <div class="sd-panel-title">Revenue Mix by Product Line</div>
+                    <div class="sd-panel-sub">By item group, selected period</div>
+                </div>
+            </div>
+            <div data-role="sd-mix"></div>
+        </div>
+
+        <div class="sd-panel">
+            <div class="sd-panel-head">
+                <div>
+                    <div class="sd-panel-title">Customer Segments</div>
+                    <div class="sd-panel-sub">Revenue by customer group</div>
+                </div>
+            </div>
+            <div data-role="sd-segments"></div>
+        </div>
+
+        <div class="sd-panel" data-role="sd-region-panel" hidden>
+            <div class="sd-panel-head">
+                <div>
+                    <div class="sd-panel-title">Regional Performance</div>
+                    <div class="sd-panel-sub">Revenue by customer territory</div>
+                </div>
+            </div>
+            <div data-role="sd-regions"></div>
+        </div>
+
+        <div class="sd-panel">
+            <div class="sd-panel-head">
+                <div>
+                    <div class="sd-panel-title">Sales Activity</div>
+                    <div class="sd-panel-sub">Documents created in the period, by stage</div>
+                </div>
+            </div>
+            <div data-role="sd-funnel"></div>
+            <div class="sd-note" data-role="sd-funnel-note" hidden></div>
+        </div>
+    </section>
+
+    <section class="sd-grid-bottom">
+        <div class="sd-panel">
+            <div class="sd-panel-head">
+                <div>
+                    <div class="sd-panel-title">Top Customer Accounts</div>
+                    <div class="sd-panel-sub">By invoiced revenue, selected period</div>
+                </div>
+            </div>
+            <div class="sd-table-wrap" data-role="sd-customers"></div>
+        </div>
+
+        <div class="sd-panel">
+            <div class="sd-panel-head">
+                <div>
+                    <div class="sd-panel-title">Sales Team Performance</div>
+                    <div class="sd-panel-sub" data-role="sd-team-sub">Revenue by sales person</div>
+                </div>
+            </div>
+            <div data-role="sd-team"></div>
+        </div>
+    </section>
+
+    <div class="sd-error" data-role="sd-error" hidden></div>
+    <div class="sd-footer">Live data from ERPNext (submitted Sales Invoices, Sales Orders, Quotations, Customers). Revenue = invoice net total. Comparisons are against the previous period of equal length.</div>
+</div>

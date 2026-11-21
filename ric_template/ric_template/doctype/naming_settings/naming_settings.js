@@ -42,6 +42,20 @@ frappe.ui.form.on("Naming Settings", {
 		);
 	},
 
+	create_default_dashboards(frm) {
+		frappe.confirm(
+			__(
+				"This creates the CRM and Sales dashboards, a CRM Workspace with its desktop icon, and adds the Sales Dashboard to the Selling workspace. Anything that already exists is not changed. Continue?"
+			),
+			() => {
+				frappe.call({
+					method: "ric_template.api.create_default_dashboards",
+					freeze: true,
+				});
+			}
+		);
+	},
+
 	open_numbering_rules(frm) {
 		frappe.set_route("List", "Item Naming Rule");
 	},
