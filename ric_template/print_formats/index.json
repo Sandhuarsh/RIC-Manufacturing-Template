@@ -60,6 +60,12 @@
     "file": "purchase_quotation.html"
   },
   {
+    "name": "Purchase Invoice",
+    "doc_type": "Purchase Invoice",
+    "module": "Accounts",
+    "file": "purchase_invoice.html"
+  },
+  {
     "name": "Request for Quotation",
     "doc_type": "Request for Quotation",
     "module": "Buying",

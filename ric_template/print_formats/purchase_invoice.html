@@ -1,0 +1,94 @@
+{%- set co = frappe.get_doc('Company', doc.company) -%}
+{%- set lh = letter_head if letter_head is defined else '' -%}
+{%- macro fm(v) -%}{{ frappe.utils.fmt_money(v or 0, currency=None) }}{%- endmacro -%}
+{%- macro pc(r) -%}{{ r|int if r == r|int else r|round(2) }}{%- endmacro -%}
+{%- macro flat(h) -%}{{ ((h or '')|replace('<br>', ', ')|replace('<br/>', ', ')|replace('<br />', ', ')|striptags)|trim|trim(', ') }}{%- endmacro -%}
+{%- macro addr(n, fb) -%}{%- if n -%}{%- set a = frappe.get_doc('Address', n) -%}{{ a.address_line1 }}{% if a.address_line2 %}, {{ a.address_line2 }}{% endif %}{% if a.city %}, {{ a.city }}{% endif %}{% if a.pincode %} - {{ a.pincode }}{% endif %}{% if a.state %}, {{ a.state }}{% endif %}{% if a.country and a.country != 'India' %}, {{ a.country }}{% endif %}{%- else -%}{{ flat(fb) }}{%- endif -%}{%- endmacro -%}
+{%- set sbm = {} -%}{%- set fl = {'b': 0, 's': 0} -%}
+{%- for it in doc.items -%}
+{%- set bl = [] -%}{%- set sr = [] -%}
+{%- if it.get('serial_and_batch_bundle') -%}{%- set bd = frappe.get_doc('Serial and Batch Bundle', it.serial_and_batch_bundle) -%}{%- for e in bd.entries -%}{%- if e.serial_no and e.serial_no not in sr -%}{%- set _ = sr.append(e.serial_no) -%}{%- endif -%}{%- if e.batch_no -%}{%- set lbl = e.batch_no if e.serial_no else (e.batch_no ~ ' (' ~ (e.qty|abs) ~ ')') -%}{%- if lbl not in bl -%}{%- set _ = bl.append(lbl) -%}{%- endif -%}{%- endif -%}{%- endfor -%}
+{%- else -%}{%- if it.get('batch_no') -%}{%- set _ = bl.append(it.batch_no) -%}{%- endif -%}{%- if it.get('serial_no') -%}{%- for s in it.serial_no.split('\n') -%}{%- if s|trim -%}{%- set _ = sr.append(s|trim) -%}{%- endif -%}{%- endfor -%}{%- endif -%}{%- endif -%}
+{%- set _ = sbm.update({loop.index|string: {'b': bl, 's': sr}}) -%}
+{%- if bl -%}{%- set _ = fl.update({'b': 1}) -%}{%- endif -%}{%- if sr -%}{%- set _ = fl.update({'s': 1}) -%}{%- endif -%}
+{%- endfor -%}
+{%- set dw = 45 - (9 if fl['b'] else 0) - (13 if fl['s'] else 0) -%}
+{%- set kinds = ['cgst','sgst','igst','cess'] -%}
+{%- set sl = {} -%}{%- set hs = {} -%}{%- set tot = {'cgst':0,'sgst':0,'igst':0,'cess':0,'tv':0} -%}
+{%- set pos = [] -%}{%- set prs = [] -%}
+{%- for it in doc.items -%}
+{%- if it.purchase_order and it.purchase_order not in pos -%}{%- set _ = pos.append(it.purchase_order) -%}{%- endif -%}
+{%- if it.purchase_receipt and it.purchase_receipt not in prs -%}{%- set _ = prs.append(it.purchase_receipt) -%}{%- endif -%}
+{%- set tv = it.net_amount if it.net_amount is not none else it.amount -%}
+{%- set r = {'cgst': it.get('cgst_rate') or 0, 'sgst': it.get('sgst_rate') or 0, 'igst': it.get('igst_rate') or 0, 'cess': it.get('cess_rate') or 0} -%}
+{%- set a = {'cgst': it.get('cgst_amount') or 0, 'sgst': it.get('sgst_amount') or 0, 'igst': it.get('igst_amount') or 0, 'cess': it.get('cess_amount') or 0} -%}
+{%- set _ = tot.update({'tv': tot['tv'] + tv}) -%}
+{%- set sk = r['cgst']|string ~ '|' ~ r['sgst']|string ~ '|' ~ r['igst']|string ~ '|' ~ r['cess']|string -%}
+{%- if sk not in sl -%}{%- set _ = sl.update({sk: {'r': r, 'a': {'cgst':0,'sgst':0,'igst':0,'cess':0}}}) -%}{%- endif -%}
+{%- set hk = (it.gst_hsn_code or '') ~ '|' ~ sk -%}
+{%- if hk not in hs -%}{%- set _ = hs.update({hk: {'code': it.gst_hsn_code or '', 'r': r, 'tv': 0, 'a': {'cgst':0,'sgst':0,'igst':0,'cess':0}}}) -%}{%- endif -%}
+{%- set _ = hs[hk].update({'tv': hs[hk]['tv'] + tv}) -%}
+{%- for k in kinds -%}{%- set _ = sl[sk]['a'].update({k: sl[sk]['a'][k] + a[k]}) -%}{%- set _ = hs[hk]['a'].update({k: hs[hk]['a'][k] + a[k]}) -%}{%- set _ = tot.update({k: tot[k] + a[k]}) -%}{%- endfor -%}
+{%- endfor -%}
+{%- set gst_total = tot['cgst'] + tot['sgst'] + tot['igst'] + tot['cess'] -%}
+{%- set lab = {'cgst':'CGST','sgst':'SGST','igst':'IGST','cess':'CESS'} -%}
+{%- set pcols = [] -%}{%- for k in kinds -%}{%- if tot[k] -%}{%- set _ = pcols.append(k) -%}{%- endif -%}{%- endfor -%}
+<style>
+.ric{font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#111;line-height:1.3}
+.ric table{width:100%;border-collapse:collapse}
+.ric td,.ric th{vertical-align:top;padding:0}
+.ric .b{font-weight:bold}.ric .r{text-align:right}.ric .c{text-align:center}.ric .mut{color:#555}.ric .nw{white-space:nowrap}
+.ric .lbl{font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.3px;display:block}
+.ric .bx{border:1px solid #222}
+.ric .bx td{padding:4px 7px}
+.ric .ttl{background:#1f3a5f;color:#fff;font-size:14px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;padding:5px 8px}
+.ric .meta td{border-bottom:1px solid #bbb;padding:3px 6px}
+.ric .it th{background:#e8edf3;border:1px solid #222;padding:4px;font-size:9px;text-align:center}
+.ric .it td{border-left:1px solid #222;border-right:1px solid #222;padding:3px 4px}
+.ric .it tr.ln td{border-top:1px dotted #aaa}
+.ric .it tr.end td{border-top:1px solid #222;border-bottom:1px solid #222;background:#f6f8fa}
+.ric .sm{font-size:8.5px;color:#444}
+.ric .tt td{padding:2px 6px}
+.ric .gt td{background:#e8edf3;border-top:1px solid #222;border-bottom:1px solid #222;font-size:12px;font-weight:bold;padding:4px 6px}
+.ric .hsn th,.ric .hsn td{border:1px solid #222;padding:2px 4px;font-size:9px}
+.ric .hsn th{background:#e8edf3;text-align:center}
+.ric .sg td{height:52px;border:1px solid #222;border-top:0;padding:4px 7px}
+.ric tr{page-break-inside:avoid}.ric thead{display:table-header-group}
+</style>
+<div class='ric'>{%- if lh -%}<div class='ric-letterhead' style='margin-bottom:6px'>{{ lh }}</div>{%- endif -%}
+{%- if not lh -%}
+<table style='margin-bottom:5px'><tr><td style='width:62%'>{% if co.company_logo %}<img src='{{ co.company_logo }}' style='max-height:56px;max-width:140px;float:left;margin-right:10px'>{% endif %}<div style='font-size:15px;font-weight:bold'>{{ doc.company }}</div><div>{{ addr(doc.billing_address, doc.get('billing_address_display')) if doc.get('billing_address') else addr(doc.get('company_address'), doc.get('company_address_display')) }}</div><div>{% if doc.company_gstin %}GSTIN: <b>{{ doc.company_gstin }}</b>{% endif %}{% if co.pan %} &nbsp; PAN: <b>{{ co.pan }}</b>{% endif %}{% if co.get('cin') %} &nbsp; CIN: <b>{{ co.cin }}</b>{% endif %}</div><div>{% if co.phone_no %}Ph: {{ co.phone_no }}{% endif %}{% if co.email %} &nbsp; {{ co.email }}{% endif %}{% if co.website %} &nbsp; {{ co.website }}{% endif %}</div></td><td></td></tr></table>
+{%- endif -%}
+<table><tr><td class='ttl'>{{ 'Debit Note' if doc.is_return else (doc.select_print_heading or 'Purchase Invoice') }}{% if doc.get('is_reverse_charge') %}<span style='float:right;font-size:9px;font-weight:normal;letter-spacing:0;text-transform:none'>Reverse Charge Applicable</span>{% endif %}</td></tr></table>
+<table class='bx' style='border-top:0'><tr>
+<td style='width:32%;border-right:1px solid #222'><span class='lbl'>Supplier</span><div class='b' style='font-size:11px'>{{ doc.supplier_name }}</div><div>{{ addr(doc.supplier_address, doc.address_display) }}</div>{% if doc.supplier_gstin %}<div>GSTIN: <b>{{ doc.supplier_gstin }}</b></div>{% endif %}{% if doc.contact_display %}<div>Attn: {{ doc.contact_display }}</div>{% endif %}</td>
+<td style='width:28%;border-right:1px solid #222'><span class='lbl'>Billed To</span><div class='b' style='font-size:11px'>{{ doc.company }}</div><div>{{ addr(doc.billing_address, doc.get('billing_address_display')) if doc.get('billing_address') else addr(doc.get('company_address'), doc.get('company_address_display')) }}</div>{% if doc.company_gstin %}<div>GSTIN: <b>{{ doc.company_gstin }}</b></div>{% endif %}{% if doc.place_of_supply %}<div>Place of Supply: <b>{{ doc.place_of_supply }}</b></div>{% endif %}</td>
+<td style='width:40%;padding:0'><table class='meta'><tr><td style='width:50%;border-right:1px solid #bbb'><span class='lbl'>Our Voucher No.</span><b>{{ doc.name }}</b></td><td><span class='lbl'>Posting Date</span><b>{{ doc.get_formatted('posting_date') }}</b></td></tr><tr><td style='border-right:1px solid #bbb'><span class='lbl'>Supplier Invoice No.</span><b>{{ doc.bill_no or '-' }}</b></td><td><span class='lbl'>Supplier Invoice Date</span><b>{{ doc.get_formatted('bill_date') if doc.bill_date else '-' }}</b></td></tr><tr><td style='border-right:1px solid #bbb'><span class='lbl'>Due Date</span><b>{{ doc.get_formatted('due_date') if doc.due_date else '-' }}</b></td><td><span class='lbl'>Payment Terms</span><b>{{ doc.payment_terms_template or '-' }}</b></td></tr><tr><td style='border-right:1px solid #bbb'><span class='lbl'>Purchase Order</span><b>{{ pos|join(', ') or '-' }}</b></td><td><span class='lbl'>Goods Receipt (GRN)</span><b>{{ prs|join(', ') or '-' }}</b></td></tr>{% if doc.is_return and doc.return_against %}<tr><td colspan='2' style='border-bottom:0'><span class='lbl'>Against Invoice</span><b>{{ doc.return_against }}</b></td></tr>{% else %}<tr><td colspan='2' style='border-bottom:0'><span class='lbl'>Currency</span><b>{{ doc.currency }}</b></td></tr>{% endif %}</table></td></tr></table>
+<table class='it' style='margin-top:6px'><thead><tr><th style='width:4%'>Sr</th><th style='width:{{ dw }}%'>Description of Goods / Services</th><th style='width:8%'>HSN / SAC</th>{% if fl['b'] %}<th style='width:9%'>Batch No.</th>{% endif %}{% if fl['s'] %}<th style='width:13%'>Serial No.</th>{% endif %}<th style='width:9%'>Qty</th><th style='width:10%'>Rate</th><th style='width:5%'>Disc %</th><th style='width:5%'>GST %</th><th style='width:14%'>Amount</th></tr></thead><tbody>
+{%- for it in doc.items -%}
+{%- set rt = (it.get('igst_rate') or ((it.get('cgst_rate') or 0) + (it.get('sgst_rate') or 0))) -%}
+<tr class='{{ 'ln' if not loop.first else '' }}'><td class='c'>{{ loop.index }}</td><td><b>{{ it.item_name }}</b>{% if it.item_code != it.item_name %} <span class='sm'>({{ it.item_code }})</span>{% endif %}{% if it.description and (it.description|striptags|trim) != it.item_name %}<div class='sm'>{{ it.description|striptags|trim }}</div>{% endif %}</td><td class='c'>{{ it.gst_hsn_code or '' }}</td>{% if fl['b'] %}<td class='c sm'>{{ sbm[loop.index|string]['b']|join('<br>') }}</td>{% endif %}{% if fl['s'] %}{% set sl_ = sbm[loop.index|string]['s'] %}<td class='sm' style='word-break:break-all'>{{ sl_[:50]|join(', ') }}{% if sl_|length > 50 %} ... (+{{ sl_|length - 50 }} more){% endif %}</td>{% endif %}<td class='r nw'><b>{{ it.get_formatted('qty') }}</b> {{ it.uom }}</td><td class='r nw'>{{ fm(it.price_list_rate if (it.discount_percentage and it.price_list_rate) else it.rate) }}</td><td class='r'>{% if it.discount_percentage %}{{ pc(it.discount_percentage) }}%{% endif %}</td><td class='c'>{% if rt %}{{ pc(rt) }}%{% endif %}</td><td class='r nw'><b>{{ fm(it.amount) }}</b></td></tr>
+{%- endfor -%}
+{%- set fill = 100 if doc.items|length <= 3 else (40 if doc.items|length <= 6 else 0) -%}
+{%- if fill -%}<tr><td style='height:{{ fill }}px'></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>{% if fl['b'] %}<td></td>{% endif %}{% if fl['s'] %}<td></td>{% endif %}</tr>{%- endif -%}
+<tr class='end'><td colspan='{{ 3 + fl['b'] + fl['s'] }}' class='r b' style='padding:4px'>Total Qty</td><td class='r b'>{{ doc.get_formatted('total_qty') }}</td><td colspan='3'></td><td class='r b'>{{ fm(doc.total) }}</td></tr></tbody></table>
+<table class='bx' style='border-top:0;page-break-inside:avoid'><tr>
+<td style='width:56%;border-right:1px solid #222'><span class='lbl'>Amount in Words</span><div class='b' style='font-size:10.5px'>{{ doc.in_words or doc.base_in_words }}</div>{% if gst_total %}<div class='sm' style='margin-top:3px'>Tax Amount in Words: {{ frappe.utils.money_in_words(gst_total, doc.currency) }}</div>{% endif %}{% if doc.remarks and doc.remarks != 'No Remarks' %}<div style='margin-top:6px'><span class='lbl'>Remarks</span>{{ doc.remarks }}</div>{% endif %}</td>
+<td style='width:44%;padding:0'><table class='tt'>
+<tr><td>Sub Total</td><td class='r'>{{ fm(doc.total) }}</td></tr>
+{%- if doc.discount_amount -%}<tr><td>Less: Additional Discount{% if doc.additional_discount_percentage %} @ {{ pc(doc.additional_discount_percentage) }}%{% endif %}</td><td class='r'>(-) {{ fm(doc.discount_amount) }}</td></tr><tr><td>Taxable Value</td><td class='r'>{{ fm(doc.net_total) }}</td></tr>{%- endif -%}
+{%- for sk, s in sl|dictsort -%}{%- for k in kinds -%}{%- if s['a'][k] -%}<tr><td>{{ lab[k] }} @ {{ pc(s['r'][k]) }}%</td><td class='r'>{{ fm(s['a'][k]) }}</td></tr>{%- endif -%}{%- endfor -%}{%- endfor -%}
+{%- for t in doc.taxes -%}{%- set h = ((t.description or '') ~ ' ' ~ (t.account_head or ''))|lower -%}{%- if t.tax_amount and (not gst_total or not ('gst' in h or 'cess' in h)) -%}<tr><td>{{ t.description }}{% if not gst_total and t.charge_type != 'Actual' and t.rate %} @ {{ pc(t.rate) }}%{% endif %}</td><td class='r'>{{ '(-) ' if t.add_deduct_tax == 'Deduct' else '' }}{{ fm(t.tax_amount|abs) }}</td></tr>{%- endif -%}{%- endfor -%}
+{%- if doc.rounding_adjustment -%}<tr><td>Round Off</td><td class='r'>{{ fm(doc.rounding_adjustment) }}</td></tr>{%- endif -%}
+<tr class='gt'><td>Invoice Total</td><td class='r'>{{ doc.get_formatted('rounded_total') if doc.rounded_total else doc.get_formatted('grand_total') }}</td></tr>
+{%- if doc.docstatus == 1 and doc.outstanding_amount is not none and doc.outstanding_amount != doc.grand_total -%}<tr><td>Paid / Advance</td><td class='r'>{{ fm(doc.grand_total - doc.outstanding_amount) }}</td></tr><tr><td class='b'>Balance Payable</td><td class='r b'>{{ fm(doc.outstanding_amount) }}</td></tr>{%- endif -%}
+</table></td></tr></table>
+{%- if gst_total -%}
+<table class='hsn' style='margin-top:6px;page-break-inside:avoid'><thead><tr><th rowspan='2'>HSN / SAC</th><th rowspan='2'>Taxable Value</th>{% for k in pcols %}<th colspan='2'>{{ lab[k] }}</th>{% endfor %}<th rowspan='2'>Total Tax</th></tr><tr>{% for k in pcols %}<th>Rate</th><th>Amount</th>{% endfor %}</tr></thead><tbody>
+{%- for hk, h in hs|dictsort -%}<tr><td>{{ h['code'] }}</td><td class='r'>{{ fm(h['tv']) }}</td>{% for k in pcols %}<td class='r'>{{ pc(h['r'][k]) }}%</td><td class='r'>{{ fm(h['a'][k]) }}</td>{% endfor %}<td class='r'>{{ fm(h['a']['cgst'] + h['a']['sgst'] + h['a']['igst'] + h['a']['cess']) }}</td></tr>{%- endfor -%}
+<tr class='b'><td class='r'>Total</td><td class='r'>{{ fm(tot['tv']) }}</td>{% for k in pcols %}<td></td><td class='r'>{{ fm(tot[k]) }}</td>{% endfor %}<td class='r'>{{ fm(gst_total) }}</td></tr></tbody></table>
+{%- endif -%}
+{%- if doc.get('terms') -%}<table class='bx' style='margin-top:6px;page-break-inside:avoid'><tr><td><span class='lbl'>Terms &amp; Conditions</span>{% if '<' in doc.terms %}{{ doc.terms }}{% else %}<div style='white-space:pre-line'>{{ doc.terms }}</div>{% endif %}</td></tr></table>{%- endif -%}
+<table class='sg' style='margin-top:6px;page-break-inside:avoid'><tr><td style='width:34%'><span class='lbl'>Prepared By</span></td><td style='width:33%'><span class='lbl'>Verified By (Accounts)</span></td><td style='width:33%' class='r'><b>For {{ doc.company }}</b><div style='margin-top:30px'>Authorised Signatory</div></td></tr></table>
+<div class='c sm' style='margin-top:4px'>This is a computer generated document.</div>
+</div>
