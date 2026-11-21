@@ -1,0 +1,57 @@
+{%- set co = frappe.get_doc('Company', doc.company) -%}
+{%- set lh = letter_head if letter_head is defined else '' -%}
+{%- set cad = frappe.get_all('Dynamic Link', filters={'link_doctype': 'Company', 'link_name': doc.company, 'parenttype': 'Address'}, fields=['parent'], limit=1) -%}
+{%- set ca = frappe.get_doc('Address', cad[0].parent) if cad else none -%}
+{%- macro flat(h) -%}{{ ((h or '')|replace('<br>', ', ')|replace('<br/>', ', ')|replace('<br />', ', ')|replace('\n', ', ')|striptags)|trim|trim(', ') }}{%- endmacro -%}
+{%- macro addr(a) -%}{%- if a -%}{{ a.address_line1 }}{% if a.address_line2 %}, {{ a.address_line2 }}{% endif %}{% if a.city %}, {{ a.city }}{% endif %}{% if a.pincode %} - {{ a.pincode }}{% endif %}{% if a.state %}, {{ a.state }}{% endif %}{%- endif -%}{%- endmacro -%}
+{%- set inward = (doc.entry_type == 'Gate In') -%}
+{%- set party = '' -%}
+{%- if doc.supplier -%}{%- set party = frappe.db.get_value('Supplier', doc.supplier, 'supplier_name') or doc.supplier -%}{%- elif doc.document_reference in ['Sales Order', 'Delivery Note', 'Sales Invoice', 'Quotation'] and doc.reference_number -%}{%- set party = frappe.db.get_value(doc.document_reference, doc.reference_number, 'customer_name') or '' -%}{%- endif -%}
+{%- set links = [] -%}
+{%- for f in ['purchase_receipt', 'subcontracting_receipt', 'stock_entry', 'outbound_material_transfer', 'return_material_transfer'] -%}{%- if doc.get(f) and doc.get(f) not in links -%}{%- set _ = links.append(doc.get(f)) -%}{%- endif -%}{%- endfor -%}
+{%- set tq = namespace(v=0) -%}
+{%- for it in doc.gate_pass_table -%}{%- set tq.v = tq.v + ((it.received_qty if inward else it.dispatched_qty) or 0) -%}{%- endfor -%}
+<style>
+.ric{font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#111;line-height:1.3}
+.ric table{width:100%;border-collapse:collapse}
+.ric td,.ric th{vertical-align:top;padding:0}
+.ric .b{font-weight:bold}.ric .r{text-align:right}.ric .c{text-align:center}.ric .mut{color:#555}.ric .nw{white-space:nowrap}
+.ric .lbl{font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.3px;display:block}
+.ric .bx{border:1px solid #222}
+.ric .bx td{padding:4px 7px}
+.ric .ttl{background:#1f3a5f;color:#fff;font-size:14px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;padding:5px 8px}
+.ric .meta td{border-bottom:1px solid #bbb;padding:3px 6px}
+.ric .it th{background:#e8edf3;border:1px solid #222;padding:4px;font-size:9px;text-align:center}
+.ric .it td{border-left:1px solid #222;border-right:1px solid #222;padding:3px 4px}
+.ric .it tr.ln td{border-top:1px dotted #aaa}
+.ric .it tr.end td{border-top:1px solid #222;border-bottom:1px solid #222;background:#f6f8fa}
+.ric .sm{font-size:8.5px;color:#444}
+.ric .sg td{height:54px;border:1px solid #222;padding:4px 7px}
+.ric .alert{background:#fff4e5;border:1px solid #c77700}
+.ric tr{page-break-inside:avoid}.ric thead{display:table-header-group}
+</style>
+<div class='ric'>{%- if lh -%}<div class='ric-letterhead' style='margin-bottom:6px'>{{ lh }}</div>{%- endif -%}
+{%- if not lh -%}
+<table style='margin-bottom:5px'><tr><td style='width:62%'>{% if co.company_logo %}<img src='{{ co.company_logo }}' style='max-height:56px;max-width:140px;float:left;margin-right:10px'>{% endif %}<div style='font-size:15px;font-weight:bold'>{{ doc.company }}</div><div>{{ addr(ca) }}</div><div>{% if ca and ca.gstin %}GSTIN: <b>{{ ca.gstin }}</b>{% endif %}{% if co.pan %} &nbsp; PAN: <b>{{ co.pan }}</b>{% endif %}</div><div>{% if co.phone_no %}Ph: {{ co.phone_no }}{% endif %}{% if co.email %} &nbsp; {{ co.email }}{% endif %}</div></td><td></td></tr></table>
+{%- endif -%}
+<table><tr><td class='ttl'>{{ 'Gate Entry - Inward' if inward else 'Gate Pass - Outward' }}<span style='float:right;font-size:9px;font-weight:normal;letter-spacing:0;text-transform:none'>{{ doc.entry_type }}</span></td></tr></table>
+<table class='bx' style='border-top:0'><tr>
+<td style='width:38%;border-right:1px solid #222'><span class='lbl'>{{ 'Received From (Supplier)' if inward else 'Material Going To (Party)' }}</span><div class='b' style='font-size:11px'>{{ party or '-' }}</div>{% if doc.address_display %}<div>{{ flat(doc.address_display) }}</div>{% endif %}{% if doc.supplier_delivery_note %}<div style='margin-top:4px'><span class='lbl'>Supplier Delivery Note / Challan</span><b>{{ doc.supplier_delivery_note }}</b></div>{% endif %}</td>
+<td style='width:62%;padding:0'><table class='meta'><tr><td style='width:33%;border-right:1px solid #bbb'><span class='lbl'>Gate Pass No.</span><b>{{ doc.name }}</b></td><td style='width:33%;border-right:1px solid #bbb'><span class='lbl'>Date</span><b>{{ doc.get_formatted('gate_pass_date') if doc.gate_pass_date else '-' }}</b></td><td><span class='lbl'>Time</span><b>{{ doc.get_formatted('gate_pass_time') if doc.gate_pass_time else '-' }}</b></td></tr><tr><td style='border-right:1px solid #bbb'><span class='lbl'>Against Document</span><b>{{ doc.document_reference or '-' }}</b></td><td style='border-right:1px solid #bbb'><span class='lbl'>Document No.</span><b>{{ doc.reference_number or '-' }}</b></td><td><span class='lbl'>Linked Receipt / Entry</span><b>{{ links|join(', ') or '-' }}</b></td></tr><tr><td style='border-right:1px solid #bbb;border-bottom:0'><span class='lbl'>{{ 'Gate In' if inward else 'Gate Out' }} Date</span><b>{{ doc.get_formatted('gate_entry_date') if doc.gate_entry_date else '-' }}</b></td><td style='border-right:1px solid #bbb;border-bottom:0'><span class='lbl'>{{ 'Gate In' if inward else 'Gate Out' }} Time</span><b>{{ doc.get_formatted('gate_entry_time') if doc.gate_entry_time else '-' }}</b></td><td style='border-bottom:0'><span class='lbl'>Status</span><b>{{ 'Submitted' if doc.docstatus == 1 else ('Cancelled' if doc.docstatus == 2 else 'Draft') }}</b></td></tr></table></td></tr></table>
+<table class='bx' style='border-top:0'><tr><td style='width:25%;border-right:1px solid #222'><span class='lbl'>Vehicle No.</span><b style='font-size:11px'>{{ doc.vehicle_number or '-' }}</b></td><td style='width:25%;border-right:1px solid #222'><span class='lbl'>Driver Name</span><b>{{ doc.driver_name or '-' }}</b></td><td style='width:25%;border-right:1px solid #222'><span class='lbl'>Driver Contact</span><b>{{ doc.driver_contact or '-' }}</b></td><td><span class='lbl'>Security Guard</span><b>{{ doc.security_guard_name or '-' }}</b></td></tr></table>
+<table class='it' style='margin-top:6px'><thead><tr><th style='width:5%'>Sr</th><th style='width:38%'>Item / Material</th><th style='width:8%'>UoM</th><th style='width:11%'>Ordered</th><th style='width:12%'>{{ 'Received' if inward else 'Dispatched' }}</th><th style='width:11%'>Pending</th><th style='width:15%'>Warehouse</th></tr></thead><tbody>
+{%- for it in doc.gate_pass_table -%}
+<tr class='{{ 'ln' if not loop.first else '' }}'><td class='c'>{{ loop.index }}</td><td><b>{{ it.item_name or it.item_code }}</b>{% if it.item_code and it.item_code != it.item_name %} <span class='sm'>({{ it.item_code }})</span>{% endif %}{% if it.description and (it.description|striptags|trim) != it.item_name %}<div class='sm'>{{ it.description|striptags|trim }}</div>{% endif %}</td><td class='c'>{{ it.uom or '' }}</td><td class='r nw'>{{ it.get_formatted('ordered_qty') }}</td><td class='r nw'><b>{{ it.get_formatted('received_qty' if inward else 'dispatched_qty') }}</b></td><td class='r nw'>{{ it.get_formatted('pending_qty') }}</td><td>{{ it.warehouse or '' }}</td></tr>
+{%- endfor -%}
+{%- if doc.gate_pass_table|length < 6 -%}<tr><td style='height:{{ (6 - doc.gate_pass_table|length) * 22 }}px'></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>{%- endif -%}
+<tr class='end'><td colspan='4' class='r b' style='padding:4px'>Total {{ 'Received' if inward else 'Dispatched' }}</td><td class='r b'>{{ tq.v }}</td><td colspan='2'></td></tr></tbody></table>
+{%- if doc.e_invoice_reference or doc.e_waybill_number -%}
+<table class='bx' style='margin-top:6px;page-break-inside:avoid'><tr><td style='width:60%;border-right:1px solid #222'><span class='lbl'>IRN (e-Invoice)</span><b style='word-break:break-all'>{{ doc.e_invoice_reference or '-' }}</b>{% if doc.e_invoice_status %}<div class='sm'>Status: {{ doc.e_invoice_status }}</div>{% endif %}</td><td><span class='lbl'>E-Way Bill No.</span><b>{{ doc.e_waybill_number or '-' }}</b>{% if doc.e_waybill_status %}<div class='sm'>Status: {{ doc.e_waybill_status }}</div>{% endif %}</td></tr></table>
+{%- endif -%}
+{%- if doc.has_discrepancy -%}
+<table class='bx alert' style='margin-top:6px;page-break-inside:avoid'><tr><td style='width:20%;border-right:1px solid #c77700'><span class='lbl'>Lost Quantity</span><b>{{ doc.lost_quantity or 0 }}</b></td><td style='width:20%;border-right:1px solid #c77700'><span class='lbl'>Damaged Quantity</span><b>{{ doc.damaged_quantity or 0 }}</b></td><td><span class='lbl'>Discrepancy Notes</span>{{ doc.discrepancy_notes or '' }}</td></tr></table>
+{%- endif -%}
+<table class='bx' style='margin-top:6px;page-break-inside:avoid'><tr><td style='width:50%;border-right:1px solid #222'><span class='lbl'>Material Checked / Seal Condition</span><div style='height:22px'></div></td><td><span class='lbl'>Remarks</span><div style='height:22px'></div></td></tr></table>
+<table class='sg' style='margin-top:6px;page-break-inside:avoid'><tr><td style='width:25%'><span class='lbl'>Security Guard</span><div style='margin-top:26px'>{{ doc.security_guard_name or '' }}</div></td><td style='width:25%'><span class='lbl'>Driver Signature</span><div style='margin-top:26px'>{{ doc.driver_name or '' }}</div></td><td style='width:25%'><span class='lbl'>{{ 'Store In-charge' if inward else 'Dispatch In-charge' }}</span></td><td style='width:25%' class='r'><b>For {{ doc.company }}</b><div style='margin-top:30px'>Authorised Signatory</div></td></tr></table>
+<div class='c sm' style='margin-top:4px'>Computer generated gate document.</div>
+</div>

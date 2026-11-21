@@ -88,5 +88,17 @@
     "doc_type": "Stock Entry",
     "module": "Stock",
     "file": "stock_perpetual_inventory.html"
+  },
+  {
+    "name": "Gate Entry",
+    "doc_type": "Gate Pass",
+    "module": "Gate Entry",
+    "file": "gate_entry.html"
+  },
+  {
+    "name": "Payment Advice",
+    "doc_type": "Payment Entry",
+    "module": "Accounts",
+    "file": "payment_advice.html"
   }
 ]
