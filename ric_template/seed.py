@@ -134,6 +134,9 @@ def create_default_print_formats():
             continue
         if not frappe.db.exists("DocType", entry["doc_type"]):
             continue
+        # Country-specific formats are only created when the site has a company in that country.
+        if entry.get("country") and not frappe.db.exists("Company", {"country": entry["country"]}):
+            continue
 
         with open(os.path.join(PRINT_FORMAT_DIR, entry["file"]), encoding="utf-8") as html_file:
             html = html_file.read()

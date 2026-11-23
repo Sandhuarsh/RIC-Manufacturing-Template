@@ -100,5 +100,12 @@
     "doc_type": "Payment Entry",
     "module": "Accounts",
     "file": "payment_advice.html"
+  },
+  {
+    "name": "UAE Tax Invoice",
+    "doc_type": "Sales Invoice",
+    "module": "Accounts",
+    "file": "uae_tax_invoice.html",
+    "country": "United Arab Emirates"
   }
 ]
