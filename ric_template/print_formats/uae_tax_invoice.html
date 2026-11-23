@@ -1,5 +1,9 @@
 {%- set co = frappe.get_doc('Company', doc.company) -%}
-{%- set lh = letter_head if letter_head is defined else '' -%}
+{%- set lh0 = letter_head if letter_head is defined else '' -%}
+{%- set cl = frappe.db.get_value('Company', doc.company, 'default_letter_head') -%}
+{%- set clc = frappe.db.get_value('Letter Head', cl, 'content') if cl else '' -%}
+{%- set dlc = frappe.db.get_value('Letter Head', doc.letter_head, 'content') if doc.get('letter_head') else '' -%}
+{%- set lh = clc if (clc and lh0 and (not doc.get('letter_head') or lh0 == dlc)) else lh0 -%}
 {%- macro fm(v) -%}{{ frappe.utils.fmt_money(v or 0, currency=None) }}{%- endmacro -%}
 {%- macro pc(r) -%}{{ r|int if r == r|int else r|round(2) }}{%- endmacro -%}
 {%- macro flat(h) -%}{{ ((h or '')|replace('<br>', ', ')|replace('<br/>', ', ')|replace('<br />', ', ')|replace('\n', ' ')|striptags)|trim|trim(', ') }}{%- endmacro -%}

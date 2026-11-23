@@ -1,5 +1,9 @@
 {%- set co = frappe.get_doc('Company', doc.company) -%}
-{%- set lh = letter_head if letter_head is defined else '' -%}
+{%- set lh0 = letter_head if letter_head is defined else '' -%}
+{%- set cl = frappe.db.get_value('Company', doc.company, 'default_letter_head') -%}
+{%- set clc = frappe.db.get_value('Letter Head', cl, 'content') if cl else '' -%}
+{%- set dlc = frappe.db.get_value('Letter Head', doc.letter_head, 'content') if doc.get('letter_head') else '' -%}
+{%- set lh = clc if (clc and lh0 and (not doc.get('letter_head') or lh0 == dlc)) else lh0 -%}
 {%- macro fm(v) -%}{{ frappe.utils.fmt_money(v or 0, currency=None) }}{%- endmacro -%}
 {%- set sle = frappe.get_all('Stock Ledger Entry', filters={'voucher_type': doc.doctype, 'voucher_no': doc.name, 'is_cancelled': 0}, fields=['item_code', 'warehouse', 'actual_qty', 'valuation_rate', 'stock_value_difference', 'qty_after_transaction', 'stock_value'], order_by='creation asc') -%}
 {%- set gl = frappe.get_all('GL Entry', filters={'voucher_type': doc.doctype, 'voucher_no': doc.name, 'is_cancelled': 0}, fields=['account', 'debit', 'credit', 'cost_center'], order_by='creation asc') -%}
