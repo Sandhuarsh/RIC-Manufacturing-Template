@@ -1,9 +1,5 @@
 {%- set co = frappe.get_doc('Company', doc.company) -%}
-{%- set lh0 = letter_head if letter_head is defined else '' -%}
-{%- set cl = frappe.db.get_value('Company', doc.company, 'default_letter_head') -%}
-{%- set clc = frappe.db.get_value('Letter Head', cl, 'content') if cl else '' -%}
-{%- set dlc = frappe.db.get_value('Letter Head', doc.letter_head, 'content') if doc.get('letter_head') else '' -%}
-{%- set lh = clc if (clc and lh0 and (not doc.get('letter_head') or lh0 == dlc)) else lh0 -%}
+{%- set lh = letter_head if letter_head is defined else '' -%}
 {%- macro flat(h) -%}{{ ((h or '')|replace('<br>', ', ')|replace('<br/>', ', ')|replace('<br />', ', ')|striptags)|trim|trim(', ') }}{%- endmacro -%}
 {%- macro addr(n, fb) -%}{%- if n -%}{%- set a = frappe.get_doc('Address', n) -%}{{ a.address_line1 }}{% if a.address_line2 %}, {{ a.address_line2 }}{% endif %}{% if a.city %}, {{ a.city }}{% endif %}{% if a.pincode %} - {{ a.pincode }}{% endif %}{% if a.state %}, {{ a.state }}{% endif %}{% if a.country and a.country != 'India' %}, {{ a.country }}{% endif %}{%- else -%}{{ flat(fb) }}{%- endif -%}{%- endmacro -%}
 {%- set ship = frappe.get_doc('Address', doc.shipping_address_name) if doc.shipping_address_name else none -%}

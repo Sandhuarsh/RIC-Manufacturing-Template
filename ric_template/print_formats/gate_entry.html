@@ -1,9 +1,5 @@
 {%- set co = frappe.get_doc('Company', doc.company) -%}
-{%- set lh0 = letter_head if letter_head is defined else '' -%}
-{%- set cl = frappe.db.get_value('Company', doc.company, 'default_letter_head') -%}
-{%- set clc = frappe.db.get_value('Letter Head', cl, 'content') if cl else '' -%}
-{%- set dlc = frappe.db.get_value('Letter Head', doc.letter_head, 'content') if doc.get('letter_head') else '' -%}
-{%- set lh = clc if (clc and lh0 and (not doc.get('letter_head') or lh0 == dlc)) else lh0 -%}
+{%- set lh = letter_head if letter_head is defined else '' -%}
 {%- set cad = frappe.get_all('Dynamic Link', filters={'link_doctype': 'Company', 'link_name': doc.company, 'parenttype': 'Address'}, fields=['parent'], limit=1) -%}
 {%- set ca = frappe.get_doc('Address', cad[0].parent) if cad else none -%}
 {%- macro flat(h) -%}{{ ((h or '')|replace('<br>', ', ')|replace('<br/>', ', ')|replace('<br />', ', ')|replace('\n', ', ')|striptags)|trim|trim(', ') }}{%- endmacro -%}
